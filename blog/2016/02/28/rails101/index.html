@@ -10,7 +10,7 @@
 
   
   <meta name="description" content="終於完成Rails101了，寫一些心得，記得一開始能做的只是照貼程式碼，只知道貼了會出現什麼功能，接下來看著code key in就是一連串的bug迴圈阿，常常只因為一個字母，找了老半天還是找不到錯在哪，後來漸漸key錯的機率變少了，就開始了解
-程式碼的原理，這裡又卡了一段時間了，常常為了"命名" &hellip;">
+程式碼的原理，這裡又卡了一段時間了，常常為了這到底" &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,7 +84,34 @@
 
 
 <div class="entry-content"><p>終於完成Rails101了，寫一些心得，記得一開始能做的只是照貼程式碼，只知道貼了會出現什麼功能，接下來看著code key in就是一連串的bug迴圈阿，常常只因為一個字母，找了老半天還是找不到錯在哪，後來漸漸key錯的機率變少了，就開始了解
-程式碼的原理，這裡又卡了一段時間了，常常為了"命名"還"指令"想了老半天想不出什麼出來。</p>
+程式碼的原理，這裡又卡了一段時間了，常常為了這到底"命名"還"指令"想了老半天想不出來。</p>
+
+<p>最後學到了
+套Bootstrap、會員功能、一個CRUD功能討論版
+關於note_messgae在help裡的程式碼還是有點模糊在這記錄做往後參考</p>
+
+<div class="code">
+module ApplicationHelper
+  def notice_message
+    alert_types = { notice: :success, alert: :danger }
+
+    close_button_options = { class: "close", "data-dismiss" => "alert", "aria-hidden" => true }
+    close_button = content_tag(:button, "×", close_button_options)
+
+    alerts = flash.map do |type, message|
+      alert_content = close_button   message
+
+      alert_type = alert_types[type.to_sym] || type
+      alert_class = "alert alert-#{alert_type} alert-dismissable"
+
+      content_tag(:div, alert_content, class: alert_class)
+    end
+
+    alerts.join("\n").html_safe
+  end
+end
+</div>
+
 </div>
 
 
