@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2016-04-28T13:40:27+08:00</updated>
+  <updated>2016-05-02T20:29:49+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -14,15 +14,94 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Note_message]]></title>
+    <link href="http://keith331.github.io/blog/2016/03/01/note-message/"/>
+    <updated>2016-03-01T20:09:44+08:00</updated>
+    <id>http://keith331.github.io/blog/2016/03/01/note-message</id>
+    <content type="html"><![CDATA[<p>以下這段是訊息通知功能，供日後參考</p>
+
+<figure class='code'><figcaption><span>app/helpers/application_helper.rb</span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">module</span> <span class="nn">ApplicationHelper</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">notice_message</span>
+</span><span class='line'>    <span class="n">alert_types</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">notice</span><span class="p">:</span> <span class="ss">:success</span><span class="p">,</span> <span class="ss">alert</span><span class="p">:</span> <span class="ss">:danger</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">close_button_options</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">class</span><span class="p">:</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="s2">&quot;data-dismiss&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;alert&quot;</span><span class="p">,</span> <span class="s2">&quot;aria-hidden&quot;</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">close_button</span> <span class="o">=</span> <span class="n">content_tag</span><span class="p">(</span><span class="ss">:button</span><span class="p">,</span> <span class="s2">&quot;×&quot;</span><span class="p">,</span> <span class="n">close_button_options</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">alerts</span> <span class="o">=</span> <span class="n">flash</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">type</span><span class="p">,</span> <span class="n">message</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">alert_content</span> <span class="o">=</span> <span class="n">close_button</span>   <span class="n">message</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">alert_type</span> <span class="o">=</span> <span class="n">alert_types</span><span class="o">[</span><span class="n">type</span><span class="o">.</span><span class="n">to_sym</span><span class="o">]</span> <span class="o">||</span> <span class="n">type</span>
+</span><span class='line'>      <span class="n">alert_class</span> <span class="o">=</span> <span class="s2">&quot;alert alert-</span><span class="si">#{</span><span class="n">alert_type</span><span class="si">}</span><span class="s2"> alert-dismissable&quot;</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">content_tag</span><span class="p">(</span><span class="ss">:div</span><span class="p">,</span> <span class="n">alert_content</span><span class="p">,</span> <span class="ss">class</span><span class="p">:</span> <span class="n">alert_class</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">alerts</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">html_safe</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Strong Parameters]]></title>
+    <link href="http://keith331.github.io/blog/2016/03/01/strong-parameters/"/>
+    <updated>2016-03-01T20:08:41+08:00</updated>
+    <id>http://keith331.github.io/blog/2016/03/01/strong-parameters</id>
+    <content type="html"><![CDATA[<p>我們在做使用者功能裡面</p>
+
+<p>當增加了 name 的欄位，就必須要在 devise 預設的 strong_params => configure_permitted_parameters</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def configure_permitted_parameters
+</span><span class='line'>    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :password_confirmation) }
+</span><span class='line'>   end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>把 :name 加進去，這樣在表單建立資料的時候， name 欄位的資料才會被允許送進資料庫存取裡面</p>
+
+<p>然後在修改 (update) 表單的頁面還要加入</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :email, :password, :password_confirmation, :current_password) }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>name 跟 current_password ( 使用者賬戶密碼確認 ) ，才能通過，允許資料修改</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Rails101]]></title>
     <link href="http://keith331.github.io/blog/2016/02/28/rails101/"/>
     <updated>2016-02-28T12:53:24+08:00</updated>
     <id>http://keith331.github.io/blog/2016/02/28/rails101</id>
-    <content type="html"><![CDATA[<p>終於完成Rails101了，寫一些心得，記得一開始能做的只是照貼程式碼，只知道貼了會出現什麼功能，接下來看著code key in就是一連串的bug迴圈阿，常常只因為一個字母，找了老半天還是找不到錯在哪，後來漸漸key錯的機率變少了，就開始了解
-程式碼的原理，這裡又卡了一段時間了，常常為了這到底"命名"還"指令"想了老半天想不出來。</p>
-
-<p>最後學到了
-套Bootstrap、會員功能、一個CRUD功能討論版</p>
+    <content type="html"><![CDATA[<p>終於完成Rails101了，一開始真的只能照著貼程式碼，只知道貼了會出現什麼功能，完全看不懂程式碼耶，接著開始嘗試照著
+程式碼key，就開始 key錯字 => 找錯字的一連串的bug迴圈阿，常常只因為一個字母，找了老半天還是找不到錯在哪，一段時
+後，key錯的機率"似乎"變少了，熟悉key code再開始熟悉程式碼的意思，常常為了到底"命名"還"指令"想老半天，能記的下的
+就記下吧，記不下的把一些程式碼做個筆記，日後有用到一次再看一次吧。</p>
 ]]></content>
   </entry>
   
