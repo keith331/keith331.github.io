@@ -102,7 +102,10 @@ module ApplicationHelper def notice_message &hellip;">
   </header>
 
 
-<div class="entry-content"><p>以下這段是訊息通知功能，供日後參考</p>
+<div class="entry-content"><h2>以下這段是訊息通知功能，供日後參考</h2>
+
+
+
 
 <figure class='code'><figcaption><span>app/helpers/application_helper.rb</span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -132,7 +135,7 @@ module ApplicationHelper def notice_message &hellip;">
 </span><span class='line'>    <span class="n">close_button</span> <span class="o">=</span> <span class="n">content_tag</span><span class="p">(</span><span class="ss">:button</span><span class="p">,</span> <span class="s2">&quot;×&quot;</span><span class="p">,</span> <span class="n">close_button_options</span><span class="p">)</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="n">alerts</span> <span class="o">=</span> <span class="n">flash</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">type</span><span class="p">,</span> <span class="n">message</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">alert_content</span> <span class="o">=</span> <span class="n">close_button</span>   <span class="n">message</span>
+</span><span class='line'>      <span class="n">alert_content</span> <span class="o">=</span> <span class="n">close_button</span> <span class="o">+</span> <span class="n">message</span>
 </span><span class='line'>
 </span><span class='line'>      <span class="n">alert_type</span> <span class="o">=</span> <span class="n">alert_types</span><span class="o">[</span><span class="n">type</span><span class="o">.</span><span class="n">to_sym</span><span class="o">]</span> <span class="o">||</span> <span class="n">type</span>
 </span><span class='line'>      <span class="n">alert_class</span> <span class="o">=</span> <span class="s2">&quot;alert alert-</span><span class="si">#{</span><span class="n">alert_type</span><span class="si">}</span><span class="s2"> alert-dismissable&quot;</span>
@@ -144,6 +147,27 @@ module ApplicationHelper def notice_message &hellip;">
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h2>把 notice_message 放進 application.html.erb 裡面</h2>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div class="container-fluid">
+</span><span class='line'>  &lt;%= render "common/navbar" %>
+</span><span class='line'>+ &lt;%= notice_message %>
+</span><span class='line'>  &lt;%= yield %>
+</span><span class='line'>&lt;/div></span></code></pre></td></tr></table></div></figure>
+
+
 
 </div>
 
@@ -180,6 +204,8 @@ module ApplicationHelper def notice_message &hellip;">
         <a class="basic-alignment left" href="/blog/2016/03/01/strong-parameters/" title="Previous Post: Strong Parameters">&laquo; Strong Parameters</a>
       
       
+        <a class="basic-alignment right" href="/blog/2016/03/05/zhuan-xie-rake/" title="Next Post: 撰寫rake">撰寫rake &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -193,15 +219,23 @@ module ApplicationHelper def notice_message &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2016/03/01/note-message/">Note_message</a>
+        <a href="/blog/2016/05/10/counter-cache/">Counter_cache</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2016/03/01/strong-parameters/">Strong Parameters</a>
+        <a href="/blog/2016/05/10/includes/">Includes</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2016/02/28/rails101/">Rails101</a>
+        <a href="/blog/2016/05/10/cookies-and-session/">Cookies &amp; Session</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/03/16/sass-slash-scss/">Sass/SCSS</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/03/15/whats-helper/">What's Helper</a>
       </li>
     
   </ul>

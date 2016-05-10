@@ -5,18 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Strong Parameters - Keith's note</title>
+  <title>What's Helper - Keith's note</title>
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="我們在做使用者功能裡面 當增加了 name 的欄位，就必須要在 devise 預設的 strong_params => configure_permitted_parameters 1
-2
-3
-4
-5
-6
-7
-before_action : &hellip;">
+  <meta name="description" content="Helper 是一些使用在 Rails 的 View 當中，用 Ruby 產生/整理 HTML code 的一些小方法。通常被放在 app/helpers 下。預設的 Helper 名字是對應 Controller 的，產生一個 Controller 時，通常會產生一個同名的 Helper。如 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -25,7 +18,7 @@ before_action : &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://keith331.github.io/blog/2016/03/01/strong-parameters/">
+  <link rel="canonical" href="http://keith331.github.io/blog/2016/03/15/whats-helper/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Keith's note" type="application/atom+xml">
@@ -73,7 +66,7 @@ before_action : &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Strong Parameters</h1>
+      <h1 class="entry-title">What's Helper</h1>
     
     
       <p class="meta">
@@ -82,16 +75,25 @@ before_action : &hellip;">
 
 
 
-<time class='entry-date' datetime='2016-03-01T20:08:41+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>8:08 pm</span></time>
+<time class='entry-date' datetime='2016-03-15T10:26:29+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:26 am</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>我們在做使用者功能裡面</p>
+<div class="entry-content"><p>Helper 是一些使用在 Rails 的 View 當中，用 Ruby 產生/整理 HTML code 的一些小方法。通常被放在 app/helpers 下。預設的 Helper 名字是對應 Controller 的，產生一個 Controller 時，通常會產生一個同名的 Helper。如 PostsController 與 PostsHelper。</p>
 
-<p>當增加了 name 的欄位，就必須要在 devise 預設的 strong_params => configure_permitted_parameters</p>
+<p>使用 Helper 的情境多半是：</p>
+
+<p>產生的 HTML code 需要與原始程式碼進行一些邏輯混合，但不希望 View 裡面搞得太髒。
+需要與預設的 Rails 內建的一些方便 Helper 交叉使用。
+使用 Helper 封裝程式碼可以帶給專案以下一些優點：</p>
+
+<p>Don&rsquo;t repeat yourself（DRY）程式碼不重複
+Good Encapsulation好的封裝性
+提供 view 模板良好的組織
+易於修改程式碼</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -100,24 +102,40 @@ before_action : &hellip;">
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>before_action :configure_permitted_parameters, if: :devise_controller?
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>module BoardsHelper
 </span><span class='line'>
-</span><span class='line'>protected
+</span><span class='line'> # 回傳board的name，避免在view中做太多判斷
+</span><span class='line'>  def render_board_name(board)
+</span><span class='line'>      if board.present?
+</span><span class='line'>        board.name
+</span><span class='line'>    else
+</span><span class='line'>        "unknown"
+</span><span class='line'>    end
+</span><span class='line'>  end
 </span><span class='line'>
-</span><span class='line'>def configure_permitted_parameters
-</span><span class='line'>devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :password_confirmation) }
+</span><span class='line'># 常常重複的區段也可以寫進 helper，統一管理
+</span><span class='line'>  def render_board_name_path(board)
+</span><span class='line'>    link_to(board.name, board_path(board))
+</span><span class='line'>  end
 </span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
-<p>把 :name 加進去，這樣在表單建立資料的時候， name 欄位的資料才會被允許送進資料庫存取裡面</p>
-
-<p>然後在修改 (update) 表單的頁面還要加入</p>
+<p>在view中可以直接取用如下</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :email, :password, :password_confirmation, :current_password) }</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;%= render_board_name_path(@board) %></span></code></pre></td></tr></table></div></figure>
 
 
-<p>name 跟 current_password ( 使用者賬戶密碼確認 ) ，才能通過，允許資料修改</p>
+
 </div>
 
 
@@ -133,7 +151,7 @@ before_action : &hellip;">
 
 
 
-<time class='entry-date' datetime='2016-03-01T20:08:41+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>8:08 pm</span></time>
+<time class='entry-date' datetime='2016-03-15T10:26:29+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:26 am</span></time>
       
 
 
@@ -141,7 +159,7 @@ before_action : &hellip;">
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/03/01/strong-parameters/" data-via="" data-counturl="http://keith331.github.io/blog/2016/03/01/strong-parameters/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/03/15/whats-helper/" data-via="" data-counturl="http://keith331.github.io/blog/2016/03/15/whats-helper/" >Tweet</a>
   
   
   
@@ -150,10 +168,10 @@ before_action : &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2016/02/28/rails101/" title="Previous Post: Rails101">&laquo; Rails101</a>
+        <a class="basic-alignment left" href="/blog/2016/03/05/zhuan-xie-rake/" title="Previous Post: 撰寫rake">&laquo; 撰寫rake</a>
       
       
-        <a class="basic-alignment right" href="/blog/2016/03/01/note-message/" title="Next Post: note_message">note_message &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2016/03/16/sass-slash-scss/" title="Next Post: Sass/SCSS">Sass/SCSS &raquo;</a>
       
     </p>
   </footer>

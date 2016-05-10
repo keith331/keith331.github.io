@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://keith331.github.io/blog/2016/05/10/counter-cache/</loc>
+<lastmod>2016-05-10T11:16:17+08:00</lastmod>
+</url>
+<url>
+<loc>http://keith331.github.io/blog/2016/05/10/includes/</loc>
+<lastmod>2016-05-10T11:14:34+08:00</lastmod>
+</url>
+<url>
+<loc>http://keith331.github.io/blog/2016/05/10/cookies-and-session/</loc>
+<lastmod>2016-05-10T11:05:56+08:00</lastmod>
+</url>
+<url>
+<loc>http://keith331.github.io/blog/2016/03/16/sass-slash-scss/</loc>
+<lastmod>2016-03-16T10:53:28+08:00</lastmod>
+</url>
+<url>
+<loc>http://keith331.github.io/blog/2016/03/15/whats-helper/</loc>
+<lastmod>2016-03-15T10:26:29+08:00</lastmod>
+</url>
+<url>
+<loc>http://keith331.github.io/blog/2016/03/05/zhuan-xie-rake/</loc>
+<lastmod>2016-03-05T11:03:00+08:00</lastmod>
+</url>
+<url>
 <loc>http://keith331.github.io/blog/2016/03/01/note-message/</loc>
 <lastmod>2016-03-01T20:09:44+08:00</lastmod>
 </url>

@@ -5,18 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Strong Parameters - Keith's note</title>
+  <title>Counter_cache - Keith's note</title>
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="我們在做使用者功能裡面 當增加了 name 的欄位，就必須要在 devise 預設的 strong_params => configure_permitted_parameters 1
-2
-3
-4
-5
-6
-7
-before_action : &hellip;">
+  <meta name="description" content="counter_cache 是在做關聯性資料庫時計算資料量的一個方法。 照樣舉「Board」has_many「Topics」的例子來看 正常我們會寫類似下方的程式碼來算出這個 Board 內有多少個 Topics： 1
+@board.topics.size &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -25,7 +19,7 @@ before_action : &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://keith331.github.io/blog/2016/03/01/strong-parameters/">
+  <link rel="canonical" href="http://keith331.github.io/blog/2016/05/10/counter-cache/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Keith's note" type="application/atom+xml">
@@ -73,7 +67,7 @@ before_action : &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Strong Parameters</h1>
+      <h1 class="entry-title">Counter_cache</h1>
     
     
       <p class="meta">
@@ -82,42 +76,48 @@ before_action : &hellip;">
 
 
 
-<time class='entry-date' datetime='2016-03-01T20:08:41+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>8:08 pm</span></time>
+<time class='entry-date' datetime='2016-05-10T11:16:17+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:16 am</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>我們在做使用者功能裡面</p>
+<div class="entry-content"><p>counter_cache 是在做關聯性資料庫時計算資料量的一個方法。</p>
 
-<p>當增加了 name 的欄位，就必須要在 devise 預設的 strong_params => configure_permitted_parameters</p>
+<p>照樣舉「Board」has_many「Topics」的例子來看 正常我們會寫類似下方的程式碼來算出這個 Board 內有多少個 Topics：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>@board.topics.size</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這代表每次我們要算數量的時候都得下一個sql指令去算有多少topics，一樣是會造成效能問題。</p>
+
+<p>所以 Rails 內建了 counter_cache 的方法，我們只要在 Topic model 內加上counter_cache: true</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>before_action :configure_permitted_parameters, if: :devise_controller?
-</span><span class='line'>
-</span><span class='line'>protected
-</span><span class='line'>
-</span><span class='line'>def configure_permitted_parameters
-</span><span class='line'>devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :password_confirmation) }
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Topic &lt; ActiveRecord::Base
+</span><span class='line'>    belongs_to :board, counter_cache: true
 </span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
-<p>把 :name 加進去，這樣在表單建立資料的時候， name 欄位的資料才會被允許送進資料庫存取裡面</p>
+<p>然後在 Board 的資料庫內新增一個叫做topics_count的欄位</p>
 
-<p>然後在修改 (update) 表單的頁面還要加入</p>
+<p>這樣以後當這個 Board內的 topics 有增減的時候，Rails就會幫我們增減topics_count的欄位，如此一來下次再下@board.topics.size的指令時 Rails就會預設去找topics_count的欄位，不用重新下 SQL指令計算。</p>
+
+<p>自定 Counter Cache 欄位：</p>
+
+<p>我們也可以覆蓋 Rails的預設規定，自己定義要增減的欄位名稱，例如把topics_count改成count_of_topics：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :email, :password, :password_confirmation, :current_password) }</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Topic &lt; ActiveRecord::Base
+</span><span class='line'>    belongs_to :board, counter_cache: :count_of_topics
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
-
-<p>name 跟 current_password ( 使用者賬戶密碼確認 ) ，才能通過，允許資料修改</p>
 </div>
 
 
@@ -133,7 +133,7 @@ before_action : &hellip;">
 
 
 
-<time class='entry-date' datetime='2016-03-01T20:08:41+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>8:08 pm</span></time>
+<time class='entry-date' datetime='2016-05-10T11:16:17+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:16 am</span></time>
       
 
 
@@ -141,7 +141,7 @@ before_action : &hellip;">
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/03/01/strong-parameters/" data-via="" data-counturl="http://keith331.github.io/blog/2016/03/01/strong-parameters/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/05/10/counter-cache/" data-via="" data-counturl="http://keith331.github.io/blog/2016/05/10/counter-cache/" >Tweet</a>
   
   
   
@@ -150,10 +150,8 @@ before_action : &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2016/02/28/rails101/" title="Previous Post: Rails101">&laquo; Rails101</a>
+        <a class="basic-alignment left" href="/blog/2016/05/10/includes/" title="Previous Post: includes">&laquo; includes</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2016/03/01/note-message/" title="Next Post: note_message">note_message &raquo;</a>
       
     </p>
   </footer>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rails | Keith's note]]></title>
   <link href="http://keith331.github.io/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2016-05-02T20:31:00+08:00</updated>
+  <updated>2016-05-10T11:19:33+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -20,8 +20,8 @@
     <id>http://keith331.github.io/blog/2016/02/28/rails101</id>
     <content type="html"><![CDATA[<p>終於完成Rails101了，一開始真的只能照著貼程式碼，只知道貼了會出現什麼功能，完全看不懂程式碼耶，接著開始嘗試照著
 程式碼key，就開始 key錯字 => 找錯字的一連串的bug迴圈阿，常常只因為一個字母，找了老半天還是找不到錯在哪，一段時間
-後，key錯的機率"似乎"變少了，熟悉key code再開始熟悉程式碼的意思，常常為了到底"命名"還"指令"想老半天，能記的下的
-就記下吧，記不下的把一些程式碼做個筆記，日後有用到一次再看一次吧。</p>
+後，key錯的機率"似乎"變少了，熟悉key code再開始熟悉程式碼的意思，常常為了到底"命名"、"指令"想老半天，能記的下的
+就記下吧，記不下的把一些程式碼做個筆記，日後有用到一次看一次加深印象。</p>
 ]]></content>
   </entry>
   

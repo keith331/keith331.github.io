@@ -9,27 +9,8 @@
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="以下這段是訊息通知功能，供日後參考 app/helpers/application_helper.rb
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-module ApplicationHelper def notice_message &hellip;">
+  <meta name="description" content="counter_cache 是在做關聯性資料庫時計算資料量的一個方法。 照樣舉「Board」has_many「Topics」的例子來看 正常我們會寫類似下方的程式碼來算出這個 Board 內有多少個 Topics： 1
+@board.topics.size &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -89,6 +70,702 @@ module ApplicationHelper def notice_message &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2016/05/10/counter-cache/">Counter_cache</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-05-10T11:16:17+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:16 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>counter_cache 是在做關聯性資料庫時計算資料量的一個方法。</p>
+
+<p>照樣舉「Board」has_many「Topics」的例子來看 正常我們會寫類似下方的程式碼來算出這個 Board 內有多少個 Topics：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>@board.topics.size</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這代表每次我們要算數量的時候都得下一個sql指令去算有多少topics，一樣是會造成效能問題。</p>
+
+<p>所以 Rails 內建了 counter_cache 的方法，我們只要在 Topic model 內加上counter_cache: true</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Topic &lt; ActiveRecord::Base
+</span><span class='line'>    belongs_to :board, counter_cache: true
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然後在 Board 的資料庫內新增一個叫做topics_count的欄位</p>
+
+<p>這樣以後當這個 Board內的 topics 有增減的時候，Rails就會幫我們增減topics_count的欄位，如此一來下次再下@board.topics.size的指令時 Rails就會預設去找topics_count的欄位，不用重新下 SQL指令計算。</p>
+
+<p>自定 Counter Cache 欄位：</p>
+
+<p>我們也可以覆蓋 Rails的預設規定，自己定義要增減的欄位名稱，例如把topics_count改成count_of_topics：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Topic &lt; ActiveRecord::Base
+</span><span class='line'>    belongs_to :board, counter_cache: :count_of_topics
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/05/10/includes/">Includes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-05-10T11:14:34+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:14 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>當我們操作關聯性資料時，可以使用includes將關聯資料先抓出來，這樣每次要調用資料時就不是去資料庫搜尋，而是從已經調閱出來的資料搜尋，可以提高效能。舉例說明：</p>
+
+<p>假設「Board」has_many「Topics」，原本我們會這樣寫：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Board &lt; ActiveRecord::Base
+</span><span class='line'>  def
+</span><span class='line'>    @boards = Board.all
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這種情況下若我們在view裡面寫@board.topics，假設我們共有10個board，系統會這樣幫我們找資料：</p>
+
+<p>1.到資料庫裡找board_id = 1 的topic</p>
+
+<p>2.到資料庫裡找board_id = 2 的topic</p>
+
+<p>&hellip;..</p>
+
+<p>10.到資料庫裡找board_id = 10 的topic</p>
+
+<p>這樣的做法有個很弔詭的地方在於我們重複搜尋了資料庫10次，造成效能問題。</p>
+
+<p>若加上 includes後會是這樣：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Board &lt; ActiveRecord::Base
+</span><span class='line'>  def
+</span><span class='line'>    @boards = Board.includes(:topics).all
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這種時候我們若在view裡面寫@board.topics，假設我們共有10個board，系統會這樣幫我們找資料：</p>
+
+<p>1.到資料庫裡把topic全部抓出來</p>
+
+<p>2.從抓出來的 topic中找到 board_id 相對應的topic。</p>
+
+<p>這樣做我們就只需要搜尋一次，直接減少了資料庫的負擔。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/05/10/cookies-and-session/">Cookies &amp; Session</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-05-10T11:05:56+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:05 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Cookies</p>
+
+<p>看演唱會或是去遊樂園玩常常會發生一種情況，就是入場以後要暫時出場，這時候工作人員通常會給你蓋個手章，用來註記你曾經入場過，基本上 Cookies 的功用就是這個手章，只要使用者進到我們的網站，我們就幫他儲存一個 Cookies ，下次當使用者再度造訪時我們就可以由 Cookies 得知使用者的資訊。</p>
+
+<p>有些遊樂園的手章上會標記當天的入園時間，以免有人回家不洗澡隔天又來玩一次，而 cookies 記錄這個時間的方法就是以 key/value 的形式儲存在使用者的瀏覽器中，例如：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{"login_time": "1990/2/1"}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但 Cookies 屬於沒有加密的公開檔案，所以不建議儲存敏感資料。</p>
+
+<p>Session</p>
+
+<p>相較於 Cookies 存在 Client 端， Session 則是存在 Server 的資料，通常與 Cookies 相呼應。</p>
+
+<p>當使用者造訪我們的網站時，我們由伺服器產生 session id (32 byte long MD5 hash value)，並傳送存有這個 session id 的 cookie 給瀏覽器儲存，之後使用者造訪我們網站時，只需要比對 cookies 上的 session id 和 session 裡的 session id 就可以知道使用者身份，大部份的網站也是運用此原理實作儲存 User 登入狀態的機制。</p>
+
+<p>這樣做的好處是若有人劫取到使用者的 Cookies 資料也無法得知資料內容，但是仍有 Hijacking 攻擊的疑慮，可以參考 Rails Guide 的 Security章節。</p>
+
+<p>Rails session</p>
+
+<p>在 Rails 中只要使用session[:session_name] 的 instance method 就可以在 controller 拿取 Session 的資料，例如以下的購物車功能：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ApplicationController &lt; ActionController::Base
+</span><span class='line'>  def find_cart
+</span><span class='line'>    @cart = Cart.find_by(id: session[:cart_id])
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>同理我們也可以將資料儲存或刪除 Session：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ApplicationController &lt; ActionController::Base
+</span><span class='line'>  def store_cart
+</span><span class='line'>    session[:cart_id] = cart.id
+</span><span class='line'>  end
+</span><span class='line'>  def reset_cart
+</span><span class='line'>    session.delete(:cart_id)
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>延伸閱讀-Authenticity Token</p>
+
+<p>所謂的 authenticity_token 就是一串隨機生成的 string ，在我們建立 Rails 的表單時， Rails 將會隨機生成一個 authenticity_token 存在 session 中，並且在表單的 hidden field 中也加入一樣的 authenticity_token ，當我們送出表單（post request）時， rails 會驗證表單的 authenticity_token 和 session 中的 authenticity_token 是否一樣，一樣才可以成功送出。</p>
+
+<p>這樣做的好處是可以避免所謂的跨站請求偽造 (Cross-site Request Forgery) ，又稱 CSRF。 CSRF 攻擊的原理是偽造一個 form 送 post 給伺服器，所以很有可能發生的情況是你在Ａ網站有登入使用者，但是在Ｂ網站點了帶有 CSRF code的連結，內容是要重新設定Ａ網站的使用者密碼為 12345678，此時Ａ網站以為是你自己送出的請求，那麼你的密碼就被換掉了。</p>
+
+<p>而 Rails 加上了 authenticity_token 這樣的機制就是為了阻擋 CSRF，因為Ｂ網站不會知道你的 authenticity_token 是什麼，送出的 post request 就會被擋下來。在 CSRF 中預設會檢查 POST, PUT, DELETE requests 的 authenticity_token。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/03/16/sass-slash-scss/">Sass/SCSS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-03-16T10:53:28+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:53 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Asset Pipeline 提供了內建直接使用 Sass 撰寫 CSS 的功能。你也許會生出這樣的疑惑：什麼是 Sass？ Why should I care?</p>
+
+<p>Sass (Syntactically Awesome Stylesheets) 原先是內建在 Haml 中的一個副功能。</p>
+
+<p>Haml</p>
+
+<p>要談 Sass，就不得不先來談 Haml 這個 project。 Haml 全名為 HTML Abstract Markup Language，它是提供網頁設計師撰寫 HTML 的另外一條途徑。</p>
+
+<p>透過 Haml，你可以很快的使用它的 syntax 寫出結構穩固的 HTML。</p>
+
+<p>網頁設計師經常有一個煩惱：在撰寫 HTML 時要是忘記關一個 TAG，在瀏覽器中整個版面可能就會大爆炸，而這樣的 Bug 卻是很難被抓出來的。</p>
+
+<p>Haml 主要就是讓開發者，能夠使用縮排的方式撰寫 HTML，輕鬆做到永不忘記關 Tag 的效果。以下是 Haml 範例：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>%h1= "Hello World"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>產生出來的 HTML 就會長這樣</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;h1>Hello World&lt;/h1></span></code></pre></td></tr></table></div></figure>
+
+
+<p>而</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>%ul{:id => "list", :class => "menu"}
+</span><span class='line'>    %li= "Item 1"
+</span><span class='line'>    %li= "Item 2"
+</span><span class='line'>    %li= "Item 3"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>會產生出來這樣的 HTML</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;ul id="list" class="menu">
+</span><span class='line'>      &lt;li>Item 1&lt;/li>
+</span><span class='line'>      &lt;li>Item 2&lt;/li>
+</span><span class='line'>      &lt;li>Item 3&lt;/li>
+</span><span class='line'>  &lt;/ul></span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用 Haml 撰寫 HTML 的好處</p>
+
+<p>Haml 是需要使用縮排撰寫，再行 compile 的 markup language。它可以讓你：</p>
+
+<p>阻絕撰寫出錯誤結構的 HTML TAG 的機會</p>
+
+<p>只要 syntax 一錯誤，編譯就無法成功。利用這樣的特性，很容易阻絕寫出會在瀏覽器因為 TAG 結構錯誤而難以 debug 出的 HTML。</p>
+
+<p>輕鬆調整排版</p>
+
+<p>在網頁設計開發階段，若要大幅調整 HTML 結構，對網頁設計師也是很傷腦筋的一件事。因為大幅的搬動 HTML，通常有時候會造成：「少剪到一個 TAG」或 「改了開頭 TAG ，卻忘了改關閉 TAG 」的憾事。</p>
+
+<p>在 Haml 中，這些狀況都不會發生。因為 Haml 本身就屬於「塊狀結構」、「自我 close」。因此不論怎樣搬動和調整，只要符合縮排，幾乎都不會爆炸。</p>
+
+<p>使用 Haml 撰寫 HTML 的壞處</p>
+
+<p>如此 powerful 的 markup language 為何沒有風行？反倒是原先屬於副功能的 Sass 大紅特紅。原因就在於 Haml 的特性：不只需要被機器 compile，它也需要被人腦 compile。</p>
+
+<p>HTML 本身就是一門相當直觀的 markup language。在撰寫 Haml 時，排版雖然相當輕鬆。但接手維護 Haml 版面的人，卻通常痛苦不堪。因為「非常不直觀」。</p>
+
+<p>這也是 Haml 的反對者，批評最力的地方。</p>
+
+<p>多數人無法接受維護不直觀的「任何東西」，加上撰寫 Haml 需要另外學習特殊的 syntax。沒有壓倒性的好處，一般人是不會貿然進行技術投資的。這也是為什麼 Haml 始終處是小眾技術的主要原因。</p>
+
+<p>Sass / SCSS</p>
+
+<p>拉回來談 Sass，Sass 原先是附屬在 Haml 裡面的一個副功能。這也是 sass-convert 這個指令必須要安裝 haml 這個 gem 才能使用的原因。</p>
+
+<p>Sass 的原理，是讓開發者可以透過「縮排」的方式去撰寫維護 CSS，同樣可以避免忘記關 TAG 而大爆炸的糗事。</p>
+
+<p>而因為 CSS 的結構特性，造成了 Sass 與 Haml 截然不同的命運。多數人反對 Haml，是因為 Haml 反而造成了 HTML 在閱讀上的不直觀。</p>
+
+<p>而 Sass 的語法</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>.content
+</span><span class='line'>    margin: 2em 0
+</span><span class='line'>    h1
+</span><span class='line'>      font-size: 2em</span></code></pre></td></tr></table></div></figure>
+
+
+<p>產生出</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>.content{
+</span><span class='line'>    margin: 2em 0;
+</span><span class='line'>   }
+</span><span class='line'>   .content h1{
+</span><span class='line'>      font-size: 2em;
+</span><span class='line'>   }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>反倒讓 CSS 的維護變得直觀了。接觸 Sass / SCSS 後的不少開發者甚至認為，縮排 block 的撰寫方式才是 CSS 在被發明時應該被設計出來的樣子。</p>
+
+<p>現在撰寫 CSS 的方式，有一個絕大缺點：只要在結構上涉及巢狀或多個 class，維護者就必須複製貼上 style。不少人認為這真是愚蠢至極且煩人透頂的設計。</p>
+
+<p>其他便利功能</p>
+
+<p>Sass 也提供了其他便利功能，如變數、函數、數學、繼承、mixin …等等功能。</p>
+
+<p>在進行網頁 protyping 時，更改全站配色或者是直接提供兩個以上的設計，對設計師來說是家常便飯的事。</p>
+
+<p>但更改全站配色卻是相當麻煩的一件事，因為「尋找 + 全數取代」，並不能保證最後會有正確的結果。很有可能：你更改了所有 CSS 中涉及連結的顏色，卻發現在全數取代的過程中，不小心也改到邊框的顏色。</p>
+
+<p>若能使用變數去指定特定 style 的顏色，該有多好。</p>
+
+<p>變數 ( Variables )</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$border-color: #3bbfce
+</span><span class='line'>   $link-color: #3bbfcf
+</span><span class='line'>   .content
+</span><span class='line'>      border-color: $border-color
+</span><span class='line'>      a
+</span><span class='line'>        color: $link-color</span></code></pre></td></tr></table></div></figure>
+
+
+<p>生成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>.content{ border-color: #3bbfce; }
+</span><span class='line'>   .content a{color: #3bbfcf; }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>數學</p>
+
+<p>在調整區塊寬度時，你也希望：每次調整寬度時，可不可以不要每次都按計算機，再全數手動修改…</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>.content
+</span><span class='line'>      width: (500px/2);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>生成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>``` css
+</span><span class='line'>   .content{ width: 250px; }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>內建函式</p>
+
+<p>在調整顏色亮度時，你希望可否無需再開調色盤，直接改 CSS 就讓 style 暗一點？</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$color = darken(#800, 20%)
+</span><span class='line'>   .content
+</span><span class='line'>      background-color: $color</span></code></pre></td></tr></table></div></figure>
+
+
+<p>生成</p>
+
+<p>   .content{ background-color: #200; }
+這都還只是 Sass 所提供的當中一小部分基礎功能而已，卻足以讓網頁設計師驚艷十足了。加上撰寫維護時十分直觀，這也難怪為何 Sass 只是 Haml 中的副功能，後繼的聲勢浪頭卻遠高於 Haml 本身。</p>
+
+<p>SCSS</p>
+
+<p>那 SCSS 又與 Sass 有什麼差別，他們看起來好像是類似的東西？</p>
+
+<p>是這樣的，Sass 原先使用的縮排，對於網頁設計師來說，還是相當不直觀。而且實務上也不能直接將舊有的 CSS 直接貼進 Sass 中。其實還是存在一定的不方便度。也因此 Sass 進行了進化，改良了 syntax，而 Sass 3 後來就被稱為 SCSS ( Sassy CSS)。</p>
+
+<p>它的 syntax 與 CSS 原有的 syntax 完全 compatible，使用了 { } 去取代原先的縮排方式。</p>
+
+<p>比如說原有的</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>.content
+</span><span class='line'>    margin: 2em 0
+</span><span class='line'>    h1
+</span><span class='line'>      font-size: 2em</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在 SCSS 中變成了</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>.content{
+</span><span class='line'>    margin: 2em 0;
+</span><span class='line'>    h1 {font-size: 2em }
+</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在撰寫上，更加無比的直觀，同時也能將舊有的 CSS 直接貼進去，完全沒問題！SCSS 更新增了不少關於 CSS3 的 feature 函式。</p>
+
+<p>就拿我最愛的背景漸變色來說好了，原先要做漸變色，CSS 必須要這樣寫：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#linear-gradient {
+</span><span class='line'>   background-image: -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0%, #ffffff), color-stop(100%, #dddddd));
+</span><span class='line'>   background-image: -webkit-linear-gradient(left top, #ffffff, #dddddd);
+</span><span class='line'>   background-image: -moz-linear-gradient(left top, #ffffff, #dddddd);
+</span><span class='line'>   background-image: -o-linear-gradient(left top, #ffffff, #dddddd);
+</span><span class='line'>   background-image: -ms-linear-gradient(left top, #ffffff, #dddddd);
+</span><span class='line'>   background-image: linear-gradient(left top, #ffffff, #dddddd);
+</span><span class='line'> }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因為你必須支援所有的 Browser。</p>
+
+<p>但在 SCSS 中，一行就搞定了！</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#linear-gradient { @include background-image(linear-gradient(left top, white, #dddddd)); }</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/03/15/whats-helper/">What's Helper</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-03-15T10:26:29+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:26 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Helper 是一些使用在 Rails 的 View 當中，用 Ruby 產生/整理 HTML code 的一些小方法。通常被放在 app/helpers 下。預設的 Helper 名字是對應 Controller 的，產生一個 Controller 時，通常會產生一個同名的 Helper。如 PostsController 與 PostsHelper。</p>
+
+<p>使用 Helper 的情境多半是：</p>
+
+<p>產生的 HTML code 需要與原始程式碼進行一些邏輯混合，但不希望 View 裡面搞得太髒。
+需要與預設的 Rails 內建的一些方便 Helper 交叉使用。
+使用 Helper 封裝程式碼可以帶給專案以下一些優點：</p>
+
+<p>Don&rsquo;t repeat yourself（DRY）程式碼不重複
+Good Encapsulation好的封裝性
+提供 view 模板良好的組織
+易於修改程式碼</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>module BoardsHelper
+</span><span class='line'>
+</span><span class='line'> # 回傳board的name，避免在view中做太多判斷
+</span><span class='line'>  def render_board_name(board)
+</span><span class='line'>      if board.present?
+</span><span class='line'>        board.name
+</span><span class='line'>    else
+</span><span class='line'>        "unknown"
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'># 常常重複的區段也可以寫進 helper，統一管理
+</span><span class='line'>  def render_board_name_path(board)
+</span><span class='line'>    link_to(board.name, board_path(board))
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在view中可以直接取用如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;%= render_board_name_path(@board) %></span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/03/05/zhuan-xie-rake/">撰寫rake</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-03-05T11:03:00+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:03 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1>撰寫 rake dev:build => 自動化執行清空+重跑 migration +種子載入資料</h1>
+
+
+
+
+<p>雖然 db:reset 已經能自動地幫我們把資料庫清空、重建、跑 seed
+
+如果想把整個開發中專案的資料一切歸零，還需要跑 rake log:clear 跟 rake tmp:clear
+如果懶得一個個打上述指令 + rake db:drop + rake db:create + rake db:migrate + rake db:seed
+來把整個專案清空重建並建立 seed 檔
+可以寫一個 rake 來自動化執行
+
+在 lib/tasks/ 資料夾建立一個檔案 dev.rake</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>namespace :dev do
+</span><span class='line'>  desc "Rebuild system"
+</span><span class='line'>  task :build => ["tmp:clear", "log:clear", "db:drop", "db:create", "db:migrate"]
+</span><span class='line'>  task :rebuild => [ "dev:build", "db:seed" ]
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這樣只要打</p>
+
+<p><code>rake dev:build</code>
+即可把專案資料一切清空歸零重建</p>
+
+<p><code>rake dev:rebuild</code>
+即可重建完再跑 seed</p>
+
+<h1> 撰寫 seed.rb 檔</h1>
+
+
+<p>
+  我們在開發專案的時候，常會需要弄些假資料來填充版面
+或是說當資料庫炸掉的時候，會很想一股腦把 資料庫整個 reset 掉
+並希望 reset 完還能把一些資料放進去，像是 user, groups, posts，不用一個個手動輸入
+
+我們來做一個 seed 檔，需求:
+
+建立一個 user 帳號 => example@gmail.com , 密碼 12345678
+並用此帳號建立 20 個 groups
+每個 group 各有 30 個 posts
+</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>puts "這個種子檔會自動建立一個帳號, 並且創建 20 個 groups, 每個 group 各 30 個 posts"
+</span><span class='line'>
+</span><span class='line'>create_account = User.create([email: 'example@gmail.com', password: '12345678', password_confirmation: '12345678', name: '測試用帳號'])
+</span><span class='line'>
+</span><span class='line'>create_groups = for i in 1..20 do
+</span><span class='line'>                  Group.create!([title: "Group no.#{i}", description: "這是用種子建立的第 #{i} 個討論版", user_id: "1"])
+</span><span class='line'>                  GroupUser.create(group_id: i, user_id: 1)
+</span><span class='line'>                  for k in 1..30 do
+</span><span class='line'>                    Post.create!([group_id: "#{i}",content: "這是用種子建立的第 #{k} 個留言", user_id: "1"])
+</span><span class='line'>                  end
+</span><span class='line'>                end</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>rake db:reset</code>
+rake db:reset 是內建的 task ，會執行一整套流程
+包含 db:drop( 資料庫移除 ) => db:create( 資料庫建立 )
+=> db:schema:load ( 資料庫欄位建立 ) => db:seed ( 執行資料庫種子 )</p>
+
+<p>重新啟動 rails s</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2016/03/01/note-message/">Note_message</a></h1>
     
     
@@ -105,7 +782,10 @@ module ApplicationHelper def notice_message &hellip;">
   </header>
 
 
-  <div class="entry-content"><p>以下這段是訊息通知功能，供日後參考</p>
+  <div class="entry-content"><h2>以下這段是訊息通知功能，供日後參考</h2>
+
+
+
 
 <figure class='code'><figcaption><span>app/helpers/application_helper.rb</span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -135,7 +815,7 @@ module ApplicationHelper def notice_message &hellip;">
 </span><span class='line'>    <span class="n">close_button</span> <span class="o">=</span> <span class="n">content_tag</span><span class="p">(</span><span class="ss">:button</span><span class="p">,</span> <span class="s2">&quot;×&quot;</span><span class="p">,</span> <span class="n">close_button_options</span><span class="p">)</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="n">alerts</span> <span class="o">=</span> <span class="n">flash</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">type</span><span class="p">,</span> <span class="n">message</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">alert_content</span> <span class="o">=</span> <span class="n">close_button</span>   <span class="n">message</span>
+</span><span class='line'>      <span class="n">alert_content</span> <span class="o">=</span> <span class="n">close_button</span> <span class="o">+</span> <span class="n">message</span>
 </span><span class='line'>
 </span><span class='line'>      <span class="n">alert_type</span> <span class="o">=</span> <span class="n">alert_types</span><span class="o">[</span><span class="n">type</span><span class="o">.</span><span class="n">to_sym</span><span class="o">]</span> <span class="o">||</span> <span class="n">type</span>
 </span><span class='line'>      <span class="n">alert_class</span> <span class="o">=</span> <span class="s2">&quot;alert alert-</span><span class="si">#{</span><span class="n">alert_type</span><span class="si">}</span><span class="s2"> alert-dismissable&quot;</span>
@@ -147,6 +827,27 @@ module ApplicationHelper def notice_message &hellip;">
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h2>把 notice_message 放進 application.html.erb 裡面</h2>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div class="container-fluid">
+</span><span class='line'>  &lt;%= render "common/navbar" %>
+</span><span class='line'>+ &lt;%= notice_message %>
+</span><span class='line'>  &lt;%= yield %>
+</span><span class='line'>&lt;/div></span></code></pre></td></tr></table></div></figure>
+
+
 
 </div>
   
@@ -183,9 +884,17 @@ module ApplicationHelper def notice_message &hellip;">
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def configure_permitted_parameters
-</span><span class='line'>    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :password_confirmation) }
-</span><span class='line'>   end</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>before_action :configure_permitted_parameters, if: :devise_controller?
+</span><span class='line'>
+</span><span class='line'>protected
+</span><span class='line'>
+</span><span class='line'>def configure_permitted_parameters
+</span><span class='line'>devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :password_confirmation) }
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
 <p>把 :name 加進去，這樣在表單建立資料的時候， name 欄位的資料才會被允許送進資料庫存取裡面</p>
@@ -227,8 +936,8 @@ module ApplicationHelper def notice_message &hellip;">
 
   <div class="entry-content"><p>終於完成Rails101了，一開始真的只能照著貼程式碼，只知道貼了會出現什麼功能，完全看不懂程式碼耶，接著開始嘗試照著
 程式碼key，就開始 key錯字 => 找錯字的一連串的bug迴圈阿，常常只因為一個字母，找了老半天還是找不到錯在哪，一段時間
-後，key錯的機率"似乎"變少了，熟悉key code再開始熟悉程式碼的意思，常常為了到底"命名"還"指令"想老半天，能記的下的
-就記下吧，記不下的把一些程式碼做個筆記，日後有用到一次再看一次吧。</p>
+後，key錯的機率"似乎"變少了，熟悉key code再開始熟悉程式碼的意思，常常為了到底"命名"、"指令"想老半天，能記的下的
+就記下吧，記不下的把一些程式碼做個筆記，日後有用到一次看一次加深印象。</p>
 </div>
   
   
@@ -249,15 +958,23 @@ module ApplicationHelper def notice_message &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2016/03/01/note-message/">Note_message</a>
+        <a href="/blog/2016/05/10/counter-cache/">Counter_cache</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2016/03/01/strong-parameters/">Strong Parameters</a>
+        <a href="/blog/2016/05/10/includes/">Includes</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2016/02/28/rails101/">Rails101</a>
+        <a href="/blog/2016/05/10/cookies-and-session/">Cookies &amp; Session</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/03/16/sass-slash-scss/">Sass/SCSS</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/03/15/whats-helper/">What's Helper</a>
       </li>
     
   </ul>

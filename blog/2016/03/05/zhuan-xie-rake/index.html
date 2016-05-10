@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>撰寫rake - Keith's note</title>
+  <meta name="author" content="Keith">
+
+  
+  <meta name="description" content="撰寫 rake dev:build => 自動化執行清空+重跑 migration +種子載入資料 雖然 db:reset 已經能自動地幫我們把資料庫清空、重建、跑 seed 如果想把整個開發中專案的資料一切歸零，還需要跑 rake log:clear 跟 rake tmp:clear &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://keith331.github.io/blog/2016/03/05/zhuan-xie-rake/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Keith's note" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Keith's note</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="keith331.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">撰寫rake</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-03-05T11:03:00+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:03 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1>撰寫 rake dev:build => 自動化執行清空+重跑 migration +種子載入資料</h1>
+
+
+
+
+<p>雖然 db:reset 已經能自動地幫我們把資料庫清空、重建、跑 seed
+
+如果想把整個開發中專案的資料一切歸零，還需要跑 rake log:clear 跟 rake tmp:clear
+如果懶得一個個打上述指令 + rake db:drop + rake db:create + rake db:migrate + rake db:seed
+來把整個專案清空重建並建立 seed 檔
+可以寫一個 rake 來自動化執行
+
+在 lib/tasks/ 資料夾建立一個檔案 dev.rake</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>namespace :dev do
+</span><span class='line'>  desc "Rebuild system"
+</span><span class='line'>  task :build => ["tmp:clear", "log:clear", "db:drop", "db:create", "db:migrate"]
+</span><span class='line'>  task :rebuild => [ "dev:build", "db:seed" ]
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這樣只要打</p>
+
+<p><code>rake dev:build</code>
+即可把專案資料一切清空歸零重建</p>
+
+<p><code>rake dev:rebuild</code>
+即可重建完再跑 seed</p>
+
+<h1> 撰寫 seed.rb 檔</h1>
+
+
+<p>
+  我們在開發專案的時候，常會需要弄些假資料來填充版面
+或是說當資料庫炸掉的時候，會很想一股腦把 資料庫整個 reset 掉
+並希望 reset 完還能把一些資料放進去，像是 user, groups, posts，不用一個個手動輸入
+
+我們來做一個 seed 檔，需求:
+
+建立一個 user 帳號 => example@gmail.com , 密碼 12345678
+並用此帳號建立 20 個 groups
+每個 group 各有 30 個 posts
+</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>puts "這個種子檔會自動建立一個帳號, 並且創建 20 個 groups, 每個 group 各 30 個 posts"
+</span><span class='line'>
+</span><span class='line'>create_account = User.create([email: 'example@gmail.com', password: '12345678', password_confirmation: '12345678', name: '測試用帳號'])
+</span><span class='line'>
+</span><span class='line'>create_groups = for i in 1..20 do
+</span><span class='line'>                  Group.create!([title: "Group no.#{i}", description: "這是用種子建立的第 #{i} 個討論版", user_id: "1"])
+</span><span class='line'>                  GroupUser.create(group_id: i, user_id: 1)
+</span><span class='line'>                  for k in 1..30 do
+</span><span class='line'>                    Post.create!([group_id: "#{i}",content: "這是用種子建立的第 #{k} 個留言", user_id: "1"])
+</span><span class='line'>                  end
+</span><span class='line'>                end</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>rake db:reset</code>
+rake db:reset 是內建的 task ，會執行一整套流程
+包含 db:drop( 資料庫移除 ) => db:create( 資料庫建立 )
+=> db:schema:load ( 資料庫欄位建立 ) => db:seed ( 執行資料庫種子 )</p>
+
+<p>重新啟動 rails s</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Keith</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-03-05T11:03:00+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:03 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/03/05/zhuan-xie-rake/" data-via="" data-counturl="http://keith331.github.io/blog/2016/03/05/zhuan-xie-rake/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/03/01/note-message/" title="Previous Post: note_message">&laquo; note_message</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2016/03/15/whats-helper/" title="Next Post: What's helper">What's helper &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/05/10/counter-cache/">Counter_cache</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/10/includes/">Includes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/10/cookies-and-session/">Cookies &amp; Session</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/03/16/sass-slash-scss/">Sass/SCSS</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/03/15/whats-helper/">What's Helper</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Keith -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
