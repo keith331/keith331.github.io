@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://keith331.github.io/blog/2016/05/14/sass-slash-scss/</loc>
+<lastmod>2016-05-14T21:52:35+08:00</lastmod>
+</url>
+<url>
+<loc>http://keith331.github.io/blog/2016/05/14/luo-ji-guan-li/</loc>
+<lastmod>2016-05-14T21:49:13+08:00</lastmod>
+</url>
+<url>
+<loc>http://keith331.github.io/blog/2016/05/14/helper-method-yu-view-context/</loc>
+<lastmod>2016-05-14T21:44:22+08:00</lastmod>
+</url>
+<url>
+<loc>http://keith331.github.io/blog/2016/05/13/nested-form/</loc>
+<lastmod>2016-05-13T18:57:25+08:00</lastmod>
+</url>
+<url>
 <loc>http://keith331.github.io/blog/2016/05/10/counter-cache/</loc>
 <lastmod>2016-05-10T11:16:17+08:00</lastmod>
 </url>
@@ -44,5 +60,8 @@
 </url>
 <url>
 <loc>http://keith331.github.io/blog/categories/rails/</loc>
+</url>
+<url>
+<loc>http://keith331.github.io/posts/2/</loc>
 </url>
 </urlset>

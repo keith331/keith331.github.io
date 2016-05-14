@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Counter_cache - Keith's note</title>
+  <title>邏輯慣例 - Keith's note</title>
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="counter_cache 是在做關聯性資料庫時計算資料量的一個方法。 照樣舉「Board」has_many「Topics」的例子來看 正常我們會寫類似下方的程式碼來算出這個 Board 內有多少個 Topics： 1
-@board.topics.size &hellip;">
+  <meta name="description" content="if / unless 的寫作觀念 Ruby 在邏輯控制的部份，除了提供 if 還提供了 unless。 unless 等於 「if not something 」等於 「if !something」。 不過雖說 Ruby 提供了 unless 這個用法，但在實務上來說，一般還是不太推薦使用 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://keith331.github.io/blog/2016/05/10/counter-cache/">
+  <link rel="canonical" href="http://keith331.github.io/blog/2016/05/14/luo-ji-guan-li/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Keith's note" type="application/atom+xml">
@@ -67,7 +66,7 @@
   
   <header>
     
-      <h1 class="entry-title">Counter_cache</h1>
+      <h1 class="entry-title">邏輯慣例</h1>
     
     
       <p class="meta">
@@ -76,46 +75,89 @@
 
 
 
-<time class='entry-date' datetime='2016-05-10T11:16:17+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:16 am</span></time>
+<time class='entry-date' datetime='2016-05-14T21:49:13+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>9:49 pm</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>counter_cache 是在做關聯性資料庫時計算資料量的一個方法。</p>
-
-<p>照樣舉「Board」has_many「Topics」的例子來看 正常我們會寫類似下方的程式碼來算出這個 Board 內有多少個 Topics：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>@board.topics.size</span></code></pre></td></tr></table></div></figure>
+<div class="entry-content"><h3>if / unless 的寫作觀念</h3>
 
 
-<p>這代表每次我們要算數量的時候都得下一個sql指令去算有多少topics，一樣是會造成效能問題。</p>
+<p>Ruby 在邏輯控制的部份，除了提供 if 還提供了 unless。</p>
 
-<p>所以 Rails 內建了 counter_cache 的方法，我們只要在 Topic model 內加上counter_cache: true</p>
+<p>unless 等於 「if not something 」等於 「if !something」。</p>
+
+<p>不過雖說 Ruby 提供了 unless 這個用法，但在實務上來說，一般還是不太推薦使用 unless。除了以下幾種狀況：</p>
+
+<p>當語意較適合時，使用 unless</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Topic &lt; ActiveRecord::Base
-</span><span class='line'>    belongs_to :board, counter_cache: true
+</pre></td><td class='code'><pre><code class=''><span class='line'>unless content.blank?
+</span><span class='line'>  # ....
 </span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
-<p>然後在 Board 的資料庫內新增一個叫做topics_count的欄位</p>
+<p>沒有 else 的時候，使用 unless</p>
 
-<p>這樣以後當這個 Board內的 topics 有增減的時候，Rails就會幫我們增減topics_count的欄位，如此一來下次再下@board.topics.size的指令時 Rails就會預設去找topics_count的欄位，不用重新下 SQL指令計算。</p>
-
-<p>自定 Counter Cache 欄位：</p>
-
-<p>我們也可以覆蓋 Rails的預設規定，自己定義要增減的欄位名稱，例如把topics_count改成count_of_topics：</p>
+<p>當沒有 else 的時候，看起來還算 OK</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Topic &lt; ActiveRecord::Base
-</span><span class='line'>    belongs_to :board, counter_cache: :count_of_topics
+</pre></td><td class='code'><pre><code class=''><span class='line'>unless foo?
+</span><span class='line'>  # ....
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但加上一個 else，看起來就不是那麼直觀了</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>unless foo?
+</span><span class='line'>  # ....
+</span><span class='line'>else
+</span><span class='line'>  # ....
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果專案當中有這樣的 code，相信我，換成 if 的陳述會直觀許多。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>if !foo?
+</span><span class='line'>  # ....
+</span><span class='line'>else
+</span><span class='line'>  # ....
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>當只有一個條件時，使用 unless 很適合。但多個條件時，使用 unless 很糟糕。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>unless foo? && baz?
+</span><span class='line'>  # ....
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>相同的，改成 if 也會直觀許多</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>if !foo? || !baz?
+</span><span class='line'>  # ...
 </span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 </div>
@@ -133,7 +175,7 @@
 
 
 
-<time class='entry-date' datetime='2016-05-10T11:16:17+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:16 am</span></time>
+<time class='entry-date' datetime='2016-05-14T21:49:13+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>9:49 pm</span></time>
       
 
 
@@ -141,7 +183,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/05/10/counter-cache/" data-via="" data-counturl="http://keith331.github.io/blog/2016/05/10/counter-cache/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/05/14/luo-ji-guan-li/" data-via="" data-counturl="http://keith331.github.io/blog/2016/05/14/luo-ji-guan-li/" >Tweet</a>
   
   
   
@@ -150,10 +192,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2016/05/10/includes/" title="Previous Post: includes">&laquo; includes</a>
+        <a class="basic-alignment left" href="/blog/2016/05/14/helper-method-yu-view-context/" title="Previous Post: helper_method 與 view_context">&laquo; helper_method 與 view_context</a>
       
       
-        <a class="basic-alignment right" href="/blog/2016/05/13/nested-form/" title="Next Post: Nested form">Nested form &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2016/05/14/sass-slash-scss/" title="Next Post: Sass / SCSS">Sass / SCSS &raquo;</a>
       
     </p>
   </footer>

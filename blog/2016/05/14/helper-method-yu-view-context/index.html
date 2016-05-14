@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Helper_method 與 View_context - Keith's note</title>
+  <meta name="author" content="Keith">
+
+  
+  <meta name="description" content="helper_method 在 controller 裡面的 method 不能在 view 裡面用。 也就是在 1
+2
+3
+4
+5
+class ProductsController def find_cart @cart = Cart.find(session[:cart_id]) end &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://keith331.github.io/blog/2016/05/14/helper-method-yu-view-context/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Keith's note" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Keith's note</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="keith331.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Helper_method 與 View_context</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-05-14T21:44:22+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>9:44 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>helper_method</h3>
+
+
+<p>在 controller 裡面的 method 不能在 view 裡面用。</p>
+
+<p>也就是在</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ProductsController
+</span><span class='line'>  def find_cart
+</span><span class='line'>    @cart = Cart.find(session[:cart_id])
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>View 裡面不能用</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;%= find_cart.items %></span></code></pre></td></tr></table></div></figure>
+
+
+<p>拉這個 cart 出來直接用。</p>
+
+<p>如果你要在 controller 和 view 都能拉現在的購物車，必須要用 helper_method 宣告這是一個 controller 級的 helper。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ApplicationController
+</span><span class='line'>  helper_method :current_cart
+</span><span class='line'>  def current_cart
+</span><span class='line'>    cart = Cart.find(session[:cart_id])
+</span><span class='line'>    return cart
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這樣你就能在 View 裡面用 current_cart。</p>
+
+<p>&lt;%= current_cart.items %>
+或者是 Controller 裡面也能用 current_cart。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ProductsController
+</span><span class='line'>  def add_to_cart
+</span><span class='line'>    current_cart.items &lt;&lt; @product
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>view_context</p>
+
+<p>在 helper 裡面的 method 不能在 controller 裡面用。 也就是在</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ProductsController
+</span><span class='line'>  def show
+</span><span class='line'>    @page_description = truncate(@product.desc, :lenght => 50 )
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>是不會動的。</p>
+
+<p>如果要在 controller 裡面取用系統內建的 Rails View Helper，或自定義的 View Helper。 必須要用 view_context 去調用。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ProductsController
+</span><span class='line'>  def show
+</span><span class='line'>    @page_description =  view_context.truncate(@product.desc, :lenght => 50 )
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>小結</h3>
+
+
+<p>但基本上還是建議在 View Helper 與 Controller 的 code 不要互相混來呼叫來呼叫去。讓 View 歸 View，Controller 歸 Controller。若真有業務上的需求需要「到處都可以用」。建議寫 Module 掛在 lib 用 mixin 技巧混入。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Keith</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-05-14T21:44:22+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>9:44 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/05/14/helper-method-yu-view-context/" data-via="" data-counturl="http://keith331.github.io/blog/2016/05/14/helper-method-yu-view-context/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/05/13/nested-form/" title="Previous Post: Nested form">&laquo; Nested form</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2016/05/14/luo-ji-guan-li/" title="Next Post: 邏輯慣例">邏輯慣例 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/05/14/sass-slash-scss/">Sass / SCSS</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/14/luo-ji-guan-li/">邏輯慣例</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/14/helper-method-yu-view-context/">Helper_method 與 View_context</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/13/nested-form/">Nested Form</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/10/counter-cache/">Counter_cache</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Keith -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
