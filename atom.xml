@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2016-05-14T21:57:58+08:00</updated>
+  <updated>2016-05-24T12:18:14+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -12,6 +12,60 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[建立 Amazon EC2 免費主機]]></title>
+    <link href="http://keith331.github.io/blog/2016/05/24/jian-li-amazon-ec2-mian-fei-zhu-ji/"/>
+    <updated>2016-05-24T10:33:38+08:00</updated>
+    <id>http://keith331.github.io/blog/2016/05/24/jian-li-amazon-ec2-mian-fei-zhu-ji</id>
+    <content type="html"><![CDATA[<h3>申請帳號</h3>
+
+
+<p><a href="http://aws.amazon.com/tw/free/">http://aws.amazon.com/tw/free/</a></p>
+
+<h3>建立免費AWS主機</h3>
+
+
+<p>1.點選左上方的<code>services</code>選擇<code>EC2</code>服務：
+<img src="http://keith331.github.io/images/aws_ec2_1.png"><p>
+2.選擇機房位置，可以選台灣連線速度最佳的日本Tokyo或新加坡<code></code>Singapore
+<img src="http://keith331.github.io/images/aws_ec2_2.png"><p>&lt;
+3.選完地區後，點選左側<code>Instance</code>再點選<code>Launch Instance</code>進入建立主機的步驟：
+<img src="http://keith331.github.io/images/aws_ec2_3.png"><p>
+4.選擇你要的作業系統，這裡我選Ubuntu Server 12.04.3 LTS
+<img src="http://keith331.github.io/images/aws_ec2_4.png"><p>
+5.主機類型Instance Type請選擇免費的T2.micro
+<img src="http://keith331.github.io/images/aws_ec2_5.png"><p>
+6.其它步驟可忽略直接跳過，直接進入設定防火牆的確認，請確認SSH有開放，之後才能登入
+<img src="http://keith331.github.io/images/aws_ec2_6.png"><p>
+7.最後確認主機沒問題後點選<code>Launch</code>啟動主機：
+<img src="http://keith331.github.io/images/aws_ec2_7.png"><p>
+8.接著會彈出一個視窗，請選擇<code>Create a new key pair</code>，然後隨意輸入一個名字在<code>Key pair name </code>欄位，接著點選<code>Download Key Pair</code>，將下載的key收好，待會要用這把key登入你的主機，下載完後點選<code> Launch Instance</code>啟動主機：<p>
+<img src="http://keith331.github.io/images/aws_ec2_8.png"><p></p>
+
+<h3>登入AWS主機</h3>
+
+
+<p>1.點選剛剛建立完成的主機，找到Public IP把它複製下來
+<img src="http://keith331.github.io/images/aws_ec2_9.png"><p>
+2.開啟終端機，輸入</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ssh -i ~/路徑/密鑰名稱.pem 使用這名稱@IP</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3.UNPROTECTED PRIVATE KEY FILE，初次使用 Key Pair 登入 EC2 可能會遇到這個警告
+通常是因為這個鑰匙檔的權限太過於公開
+<img src="http://keith331.github.io/images/aws_ec2_10.png"><p>
+輸入以下可以解決</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>chmod 400  ~/路徑/密鑰名稱.pem</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Sass / SCSS]]></title>

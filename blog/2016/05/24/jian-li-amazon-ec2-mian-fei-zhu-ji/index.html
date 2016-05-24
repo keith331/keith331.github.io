@@ -5,16 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Includes - Keith's note</title>
+  <title>建立 Amazon EC2 免費主機 - Keith's note</title>
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="當我們操作關聯性資料時，可以使用includes將關聯資料先抓出來，這樣每次要調用資料時就不是去資料庫搜尋，而是從已經調閱出來的資料搜尋，可以提高效能。舉例說明： 假設「Board」has_many「Topics」，原本我們會這樣寫： 1
-2
-3
-4
-5
-class Board &lt; &hellip;">
+  <meta name="description" content="申請帳號 http://aws.amazon.com/tw/free/ 建立免費AWS主機 1.點選左上方的services選擇EC2服務： 2.選擇機房位置，可以選台灣連線速度最佳的日本Tokyo或新加坡Singapore
+&lt;
+3.選完地區後，點選左側Instance再點選Launch &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -23,7 +20,7 @@ class Board &lt; &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://keith331.github.io/blog/2016/05/10/includes/">
+  <link rel="canonical" href="http://keith331.github.io/blog/2016/05/24/jian-li-amazon-ec2-mian-fei-zhu-ji/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Keith's note" type="application/atom+xml">
@@ -71,7 +68,7 @@ class Board &lt; &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Includes</h1>
+      <h1 class="entry-title">建立 Amazon EC2 免費主機</h1>
     
     
       <p class="meta">
@@ -80,62 +77,59 @@ class Board &lt; &hellip;">
 
 
 
-<time class='entry-date' datetime='2016-05-10T11:14:34+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:14 am</span></time>
+<time class='entry-date' datetime='2016-05-24T10:33:38+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:33 am</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>當我們操作關聯性資料時，可以使用includes將關聯資料先抓出來，這樣每次要調用資料時就不是去資料庫搜尋，而是從已經調閱出來的資料搜尋，可以提高效能。舉例說明：</p>
+<div class="entry-content"><h3>申請帳號</h3>
 
-<p>假設「Board」has_many「Topics」，原本我們會這樣寫：</p>
+
+<p><a href="http://aws.amazon.com/tw/free/">http://aws.amazon.com/tw/free/</a></p>
+
+<h3>建立免費AWS主機</h3>
+
+
+<p>1.點選左上方的<code>services</code>選擇<code>EC2</code>服務：
+<img src="/images/aws_ec2_1.png"><p>
+2.選擇機房位置，可以選台灣連線速度最佳的日本Tokyo或新加坡<code></code>Singapore
+<img src="/images/aws_ec2_2.png"><p>&lt;
+3.選完地區後，點選左側<code>Instance</code>再點選<code>Launch Instance</code>進入建立主機的步驟：
+<img src="/images/aws_ec2_3.png"><p>
+4.選擇你要的作業系統，這裡我選Ubuntu Server 12.04.3 LTS
+<img src="/images/aws_ec2_4.png"><p>
+5.主機類型Instance Type請選擇免費的T2.micro
+<img src="/images/aws_ec2_5.png"><p>
+6.其它步驟可忽略直接跳過，直接進入設定防火牆的確認，請確認SSH有開放，之後才能登入
+<img src="/images/aws_ec2_6.png"><p>
+7.最後確認主機沒問題後點選<code>Launch</code>啟動主機：
+<img src="/images/aws_ec2_7.png"><p>
+8.接著會彈出一個視窗，請選擇<code>Create a new key pair</code>，然後隨意輸入一個名字在<code>Key pair name </code>欄位，接著點選<code>Download Key Pair</code>，將下載的key收好，待會要用這把key登入你的主機，下載完後點選<code> Launch Instance</code>啟動主機：<p>
+<img src="/images/aws_ec2_8.png"><p></p>
+
+<h3>登入AWS主機</h3>
+
+
+<p>1.點選剛剛建立完成的主機，找到Public IP把它複製下來
+<img src="/images/aws_ec2_9.png"><p>
+2.開啟終端機，輸入</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Board &lt; ActiveRecord::Base
-</span><span class='line'>  def
-</span><span class='line'>    @boards = Board.all
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ssh -i ~/路徑/密鑰名稱.pem 使用這名稱@IP</span></code></pre></td></tr></table></div></figure>
 
 
-<p>這種情況下若我們在view裡面寫@board.topics，假設我們共有10個board，系統會這樣幫我們找資料：</p>
-
-<p>1.到資料庫裡找board_id = 1 的topic</p>
-
-<p>2.到資料庫裡找board_id = 2 的topic</p>
-
-<p>&hellip;..</p>
-
-<p>10.到資料庫裡找board_id = 10 的topic</p>
-
-<p>這樣的做法有個很弔詭的地方在於我們重複搜尋了資料庫10次，造成效能問題。</p>
-
-<p>若加上 includes後會是這樣：</p>
+<p>3.UNPROTECTED PRIVATE KEY FILE，初次使用 Key Pair 登入 EC2 可能會遇到這個警告
+通常是因為這個鑰匙檔的權限太過於公開
+<img src="/images/aws_ec2_10.png"><p>
+輸入以下可以解決</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Board &lt; ActiveRecord::Base
-</span><span class='line'>  def
-</span><span class='line'>    @boards = Board.includes(:topics).all
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>chmod 400  ~/路徑/密鑰名稱.pem</span></code></pre></td></tr></table></div></figure>
 
 
-<p>這種時候我們若在view裡面寫@board.topics，假設我們共有10個board，系統會這樣幫我們找資料：</p>
 
-<p>1.到資料庫裡把topic全部抓出來</p>
-
-<p>2.從抓出來的 topic中找到 board_id 相對應的topic。</p>
-
-<p>這樣做我們就只需要搜尋一次，直接減少了資料庫的負擔。</p>
 </div>
 
 
@@ -151,7 +145,7 @@ class Board &lt; &hellip;">
 
 
 
-<time class='entry-date' datetime='2016-05-10T11:14:34+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:14 am</span></time>
+<time class='entry-date' datetime='2016-05-24T10:33:38+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:33 am</span></time>
       
 
 
@@ -159,7 +153,7 @@ class Board &lt; &hellip;">
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/05/10/includes/" data-via="" data-counturl="http://keith331.github.io/blog/2016/05/10/includes/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/05/24/jian-li-amazon-ec2-mian-fei-zhu-ji/" data-via="" data-counturl="http://keith331.github.io/blog/2016/05/24/jian-li-amazon-ec2-mian-fei-zhu-ji/" >Tweet</a>
   
   
   
@@ -168,10 +162,8 @@ class Board &lt; &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2016/05/10/cookies-and-session/" title="Previous Post: Cookies &amp; Session">&laquo; Cookies &amp; Session</a>
+        <a class="basic-alignment left" href="/blog/2016/05/14/sass-slash-scss/" title="Previous Post: Sass / SCSS">&laquo; Sass / SCSS</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2016/05/10/counter-cache/" title="Next Post: counter_cache">counter_cache &raquo;</a>
       
     </p>
   </footer>
