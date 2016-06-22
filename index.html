@@ -9,9 +9,7 @@
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="申請帳號 http://aws.amazon.com/tw/free/ 建立免費AWS主機 1.點選左上方的services選擇EC2服務： 2.選擇機房位置，可以選台灣連線速度最佳的日本Tokyo或新加坡Singapore
-&lt;
-3.選完地區後，點選左側Instance再點選Launch &hellip;">
+  <meta name="description" content="評分星星功能 step1:copy jqerty.raty.js and image of star to [javascript] [image] step2: view div class="star-rating" data-score= "xx"> paste the following &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +63,108 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/06/22/raty-jqery/">Raty JQery</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-06-22T17:26:06+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2016</span></span> <span class='time'>5:26 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h4>評分星星功能</h4>
+
+
+<p>step1:copy jqerty.raty.js and image of star to [javascript] [image]</p>
+
+
+<p>step2: view
+<code> div class="star-rating" data-score= "xx"> </code>
+paste the following code:
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;script>
+</span><span class='line'>  $('.star-rating').raty ({
+</span><span class='line'>    path: '/assets/',
+</span><span class='line'>    readOnly: true,
+</span><span class='line'>    score: function() {
+</span><span class='line'>      return $(this).attr('data-score');
+</span><span class='line'>    }
+</span><span class='line'>  });
+</span><span class='line'>&lt;/script></span></code></pre></td></tr></table></div></figure>
+</p>
+
+
+<p>step3: form  for example:</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div class="field">
+</span><span class='line'>    &lt;div id="star-rating">&lt;/div>
+</span><span class='line'>  &lt;/div>
+</span><span class='line'>  &lt;div class="field">
+</span><span class='line'>    &lt;%= f.label :comment %>&lt;br>
+</span><span class='line'>    &lt;%= f.text_area :comment %>
+</span><span class='line'>  &lt;/div>
+</span><span class='line'>  &lt;div class="actions">
+</span><span class='line'>    &lt;%= f.submit %>
+</span><span class='line'>  &lt;/div>
+</span><span class='line'>&lt;% end %>
+</span><span class='line'>
+</span><span class='line'>&lt;script>
+</span><span class='line'>  $('#star-rating').raty ({
+</span><span class='line'>    path: '/assets/',
+</span><span class='line'>    scoreName: '[review[rating]'
+</span><span class='line'>  });
+</span><span class='line'>&lt;/script></span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -133,6 +233,11 @@
 
 
 
+
+<h3>將key加入</h3>
+
+
+<p>ssh/id_rsa.pub內容 加到server下 authorized_keys 之後就不用輸入key</p>
 </div>
   
   
@@ -1275,88 +1380,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/03/15/whats-helper/">What's Helper</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-03-15T10:26:29+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:26 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Helper 是一些使用在 Rails 的 View 當中，用 Ruby 產生/整理 HTML code 的一些小方法。通常被放在 app/helpers 下。預設的 Helper 名字是對應 Controller 的，產生一個 Controller 時，通常會產生一個同名的 Helper。如 PostsController 與 PostsHelper。</p>
-
-<p>使用 Helper 的情境多半是：</p>
-
-<p>產生的 HTML code 需要與原始程式碼進行一些邏輯混合，但不希望 View 裡面搞得太髒。
-需要與預設的 Rails 內建的一些方便 Helper 交叉使用。
-使用 Helper 封裝程式碼可以帶給專案以下一些優點：</p>
-
-<p>Don&rsquo;t repeat yourself（DRY）程式碼不重複
-Good Encapsulation好的封裝性
-提供 view 模板良好的組織
-易於修改程式碼</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>module BoardsHelper
-</span><span class='line'>
-</span><span class='line'> # 回傳board的name，避免在view中做太多判斷
-</span><span class='line'>  def render_board_name(board)
-</span><span class='line'>      if board.present?
-</span><span class='line'>        board.name
-</span><span class='line'>    else
-</span><span class='line'>        "unknown"
-</span><span class='line'>    end
-</span><span class='line'>  end
-</span><span class='line'>
-</span><span class='line'># 常常重複的區段也可以寫進 helper，統一管理
-</span><span class='line'>  def render_board_name_path(board)
-</span><span class='line'>    link_to(board.name, board_path(board))
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在view中可以直接取用如下</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;%= render_board_name_path(@board) %></span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1372,6 +1395,10 @@ Good Encapsulation好的封裝性
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/06/22/raty-jqery/">Raty JQery</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/05/24/jian-li-amazon-ec2-mian-fei-zhu-ji/">建立 Amazon EC2 免費主機</a>
       </li>
     
@@ -1385,10 +1412,6 @@ Good Encapsulation好的封裝性
     
       <li class="post">
         <a href="/blog/2016/05/14/helper-method-yu-view-context/">Helper_method 與 View_context</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/13/nested-form/">Nested Form</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2016-05-24T12:18:14+08:00</updated>
+  <updated>2016-06-22T17:48:21+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -12,6 +12,88 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Raty JQery]]></title>
+    <link href="http://keith331.github.io/blog/2016/06/22/raty-jqery/"/>
+    <updated>2016-06-22T17:26:06+08:00</updated>
+    <id>http://keith331.github.io/blog/2016/06/22/raty-jqery</id>
+    <content type="html"><![CDATA[<h4>評分星星功能</h4>
+
+
+<p>step1:copy jqerty.raty.js and image of star to [javascript] [image]</p>
+
+
+<p>step2: view
+<code> div class="star-rating" data-score= "xx"> </code>
+paste the following code:
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;script>
+</span><span class='line'>  $('.star-rating').raty ({
+</span><span class='line'>    path: '/assets/',
+</span><span class='line'>    readOnly: true,
+</span><span class='line'>    score: function() {
+</span><span class='line'>      return $(this).attr('data-score');
+</span><span class='line'>    }
+</span><span class='line'>  });
+</span><span class='line'>&lt;/script></span></code></pre></td></tr></table></div></figure>
+</p>
+
+
+<p>step3: form  for example:</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div class="field">
+</span><span class='line'>    &lt;div id="star-rating">&lt;/div>
+</span><span class='line'>  &lt;/div>
+</span><span class='line'>  &lt;div class="field">
+</span><span class='line'>    &lt;%= f.label :comment %>&lt;br>
+</span><span class='line'>    &lt;%= f.text_area :comment %>
+</span><span class='line'>  &lt;/div>
+</span><span class='line'>  &lt;div class="actions">
+</span><span class='line'>    &lt;%= f.submit %>
+</span><span class='line'>  &lt;/div>
+</span><span class='line'>&lt;% end %>
+</span><span class='line'>
+</span><span class='line'>&lt;script>
+</span><span class='line'>  $('#star-rating').raty ({
+</span><span class='line'>    path: '/assets/',
+</span><span class='line'>    scoreName: '[review[rating]'
+</span><span class='line'>  });
+</span><span class='line'>&lt;/script></span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[建立 Amazon EC2 免費主機]]></title>
@@ -64,6 +146,11 @@
 
 
 
+
+<h3>將key加入</h3>
+
+
+<p>ssh/id_rsa.pub內容 加到server下 authorized_keys 之後就不用輸入key</p>
 ]]></content>
   </entry>
   
