@@ -5,11 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Raty JQery - Keith's note</title>
+  <title>Searchkick - Keith's note</title>
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="評分星星功能 step1:copy jqerty.raty.js and image of star to [javascript] [image] step2: view div class="star-rating" data-score= "xx"> paste the following &hellip;">
+  <meta name="description" content="step1 1
+2
+brew install elasticsearch
+brew info elasticsearch step2:Start the server than go to localhost:9200 .You should see some code step3:Add &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://keith331.github.io/blog/2016/06/22/raty-jqery/">
+  <link rel="canonical" href="http://keith331.github.io/blog/2016/06/23/searchkick/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Keith's note" type="application/atom+xml">
@@ -66,7 +69,7 @@
   
   <header>
     
-      <h1 class="entry-title">Raty JQery</h1>
+      <h1 class="entry-title">Searchkick</h1>
     
     
       <p class="meta">
@@ -75,84 +78,74 @@
 
 
 
-<time class='entry-date' datetime='2016-06-22T17:26:06+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2016</span></span> <span class='time'>5:26 pm</span></time>
+<time class='entry-date' datetime='2016-06-23T13:51:31+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2016</span></span> <span class='time'>1:51 pm</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><h4>評分星星功能</h4>
+<div class="entry-content"><p>step1</p>
 
 
-<p>step1:copy jqerty.raty.js and image of star to [javascript] [image]</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew install elasticsearch
+</span><span class='line'>brew info elasticsearch</span></code></pre></td></tr></table></div></figure>
 
 
-<p>step2: view
-<code> div class="star-rating" data-score= "xx"> </code>
-paste the following code:
+<p><img src="/images/searchkick/1.png"><br></p>
+
+<p>step2:Start the server than go to localhost:9200 .You should see some code</p>
+
+
+<p>step3:Add searchkick to models you want to search.</p>
+
+
+<p><img src="/images/searchkick/2.png"></p>
+
+<p>step4:Add data to the search index.</p>
+
+
+<p><code>Product.reindex</code>
+<code>rake searchkick:reindex CLASS=Movie</code></p>
+
+<p>For instance</p>
+
+
+<p><code>rake searchkick:reindex CLASS=Movie</code></p>
+
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;script>
-</span><span class='line'>  $('.star-rating').raty ({
-</span><span class='line'>    path: '/assets/',
-</span><span class='line'>    readOnly: true,
-</span><span class='line'>    score: function() {
-</span><span class='line'>      return $(this).attr('data-score');
-</span><span class='line'>    }
-</span><span class='line'>  });
-</span><span class='line'>&lt;/script></span></code></pre></td></tr></table></div></figure>
-</p>
-
-
-<p>step3: form  for example:</p>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;%= form_tag search_movies_path, method: :get, class:"navbar-form navbar-right" do %>
+</span><span class='line'>  &lt;p>
+</span><span class='line'>    &lt;%= text_field_tag :search, params[:search], class:"form-control" %>
+</span><span class='line'>    &lt;%= submit_tag "Search", name: nil, class:"btn btn-default" %>
+</span><span class='line'>  &lt;/p>
+</span><span class='line'>&lt;% end %></span></code></pre></td></tr></table></div></figure>
 
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>view </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div class="field">
-</span><span class='line'>    &lt;div id="star-rating">&lt;/div>
-</span><span class='line'>  &lt;/div>
-</span><span class='line'>  &lt;div class="field">
-</span><span class='line'>    &lt;%= f.label :comment %>&lt;br>
-</span><span class='line'>    &lt;%= f.text_area :comment %>
-</span><span class='line'>  &lt;/div>
-</span><span class='line'>  &lt;div class="actions">
-</span><span class='line'>    &lt;%= f.submit %>
-</span><span class='line'>  &lt;/div>
-</span><span class='line'>&lt;% end %>
-</span><span class='line'>
-</span><span class='line'>&lt;script>
-</span><span class='line'>  $('#star-rating').raty ({
-</span><span class='line'>    path: '/assets/',
-</span><span class='line'>    scoreName: '[review[rating]'
-</span><span class='line'>  });
-</span><span class='line'>&lt;/script></span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def search
+</span><span class='line'>  if params[:search].present?
+</span><span class='line'>    @movies = Movie.search(params[:search])
+</span><span class='line'>  else
+</span><span class='line'>    @movies = Movie.all
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -171,7 +164,7 @@ paste the following code:
 
 
 
-<time class='entry-date' datetime='2016-06-22T17:26:06+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2016</span></span> <span class='time'>5:26 pm</span></time>
+<time class='entry-date' datetime='2016-06-23T13:51:31+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2016</span></span> <span class='time'>1:51 pm</span></time>
       
 
 
@@ -179,7 +172,7 @@ paste the following code:
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/06/22/raty-jqery/" data-via="" data-counturl="http://keith331.github.io/blog/2016/06/22/raty-jqery/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/06/23/searchkick/" data-via="" data-counturl="http://keith331.github.io/blog/2016/06/23/searchkick/" >Tweet</a>
   
   
   
@@ -188,10 +181,8 @@ paste the following code:
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2016/05/24/jian-li-amazon-ec2-mian-fei-zhu-ji/" title="Previous Post: 建立 Amazon EC2 免費主機">&laquo; 建立 Amazon EC2 免費主機</a>
+        <a class="basic-alignment left" href="/blog/2016/06/22/raty-jqery/" title="Previous Post: raty JQery">&laquo; raty JQery</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2016/06/23/searchkick/" title="Next Post: Searchkick">Searchkick &raquo;</a>
       
     </p>
   </footer>
