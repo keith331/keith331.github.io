@@ -9,10 +9,9 @@
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="step1 1
-2
-brew install elasticsearch
-brew info elasticsearch step2:Start the server than go to localhost:9200 .You should see some code step3:Add &hellip;">
+  <meta name="description" content="Precompile RAILS_ENV=production bundle exec rake assets:precompile
+kill -s TERM cat tmp/pids/unicorn.pid停止網站
+bundle exec unicorn_rails -c config/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +65,43 @@ brew info elasticsearch step2:Start the server than go to localhost:9200 .You sh
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/08/02/ubuntucao-zuo-bi-ji/">Ubuntu操作筆記</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-08-02T17:23:37+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2016</span></span> <span class='time'>5:23 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>Precompile</h3>
+
+
+<ol>
+<li><code>RAILS_ENV=production bundle exec rake assets:precompile</code></li>
+<li><code>kill -s TERM <code>cat tmp/pids/unicorn.pid</code></code>停止網站</li>
+<li><code>bundle exec unicorn_rails -c config/unicorn.rb -D -E production</code>啟動網站Production模式</li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1112,97 +1148,6 @@ paste the following code:
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/05/10/cookies-and-session/">Cookies &amp; Session</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-05-10T11:05:56+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:05 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Cookies</p>
-
-<p>看演唱會或是去遊樂園玩常常會發生一種情況，就是入場以後要暫時出場，這時候工作人員通常會給你蓋個手章，用來註記你曾經入場過，基本上 Cookies 的功用就是這個手章，只要使用者進到我們的網站，我們就幫他儲存一個 Cookies ，下次當使用者再度造訪時我們就可以由 Cookies 得知使用者的資訊。</p>
-
-<p>有些遊樂園的手章上會標記當天的入園時間，以免有人回家不洗澡隔天又來玩一次，而 cookies 記錄這個時間的方法就是以 key/value 的形式儲存在使用者的瀏覽器中，例如：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{"login_time": "1990/2/1"}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但 Cookies 屬於沒有加密的公開檔案，所以不建議儲存敏感資料。</p>
-
-<p>Session</p>
-
-<p>相較於 Cookies 存在 Client 端， Session 則是存在 Server 的資料，通常與 Cookies 相呼應。</p>
-
-<p>當使用者造訪我們的網站時，我們由伺服器產生 session id (32 byte long MD5 hash value)，並傳送存有這個 session id 的 cookie 給瀏覽器儲存，之後使用者造訪我們網站時，只需要比對 cookies 上的 session id 和 session 裡的 session id 就可以知道使用者身份，大部份的網站也是運用此原理實作儲存 User 登入狀態的機制。</p>
-
-<p>這樣做的好處是若有人劫取到使用者的 Cookies 資料也無法得知資料內容，但是仍有 Hijacking 攻擊的疑慮，可以參考 Rails Guide 的 Security章節。</p>
-
-<p>Rails session</p>
-
-<p>在 Rails 中只要使用session[:session_name] 的 instance method 就可以在 controller 拿取 Session 的資料，例如以下的購物車功能：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class ApplicationController &lt; ActionController::Base
-</span><span class='line'>  def find_cart
-</span><span class='line'>    @cart = Cart.find_by(id: session[:cart_id])
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>同理我們也可以將資料儲存或刪除 Session：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class ApplicationController &lt; ActionController::Base
-</span><span class='line'>  def store_cart
-</span><span class='line'>    session[:cart_id] = cart.id
-</span><span class='line'>  end
-</span><span class='line'>  def reset_cart
-</span><span class='line'>    session.delete(:cart_id)
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>延伸閱讀-Authenticity Token</p>
-
-<p>所謂的 authenticity_token 就是一串隨機生成的 string ，在我們建立 Rails 的表單時， Rails 將會隨機生成一個 authenticity_token 存在 session 中，並且在表單的 hidden field 中也加入一樣的 authenticity_token ，當我們送出表單（post request）時， rails 會驗證表單的 authenticity_token 和 session 中的 authenticity_token 是否一樣，一樣才可以成功送出。</p>
-
-<p>這樣做的好處是可以避免所謂的跨站請求偽造 (Cross-site Request Forgery) ，又稱 CSRF。 CSRF 攻擊的原理是偽造一個 form 送 post 給伺服器，所以很有可能發生的情況是你在Ａ網站有登入使用者，但是在Ｂ網站點了帶有 CSRF code的連結，內容是要重新設定Ａ網站的使用者密碼為 12345678，此時Ａ網站以為是你自己送出的請求，那麼你的密碼就被換掉了。</p>
-
-<p>而 Rails 加上了 authenticity_token 這樣的機制就是為了阻擋 CSRF，因為Ｂ網站不會知道你的 authenticity_token 是什麼，送出的 post request 就會被擋下來。在 CSRF 中預設會檢查 POST, PUT, DELETE requests 的 authenticity_token。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1218,6 +1163,10 @@ paste the following code:
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/08/02/ubuntucao-zuo-bi-ji/">Ubuntu操作筆記</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/06/23/searchkick/">Searchkick</a>
       </li>
     
@@ -1231,10 +1180,6 @@ paste the following code:
     
       <li class="post">
         <a href="/blog/2016/05/14/sass-slash-scss/">Sass / SCSS</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/14/luo-ji-guan-li/">邏輯慣例</a>
       </li>
     
   </ul>

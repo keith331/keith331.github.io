@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2016-06-23T15:03:38+08:00</updated>
+  <updated>2016-08-02T17:39:35+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu操作筆記]]></title>
+    <link href="http://keith331.github.io/blog/2016/08/02/ubuntucao-zuo-bi-ji/"/>
+    <updated>2016-08-02T17:23:37+08:00</updated>
+    <id>http://keith331.github.io/blog/2016/08/02/ubuntucao-zuo-bi-ji</id>
+    <content type="html"><![CDATA[<h3>Precompile</h3>
+
+
+<ol>
+<li><code>RAILS_ENV=production bundle exec rake assets:precompile</code></li>
+<li><code>kill -s TERM <code>cat tmp/pids/unicorn.pid</code></code>停止網站</li>
+<li><code>bundle exec unicorn_rails -c config/unicorn.rb -D -E production</code>啟動網站Production模式</li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Searchkick]]></title>
