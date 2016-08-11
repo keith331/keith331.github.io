@@ -10,8 +10,7 @@
 
   
   <meta name="description" content="Brakeman Brakeman是一款專門面向Ruby on Rails應用程式的漏洞掃描工具，同時也針對程序中一部分數值向另一部分傳遞的流程執行數據流分析。無需安裝整套應用程式即可使用該軟體 gem install 1
-gem install brakeman 指定結果輸出的文件： 1
-2 &hellip;">
+gem install brakeman 指定結果輸出的文件(全部掃描) &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -100,7 +99,7 @@ gem install brakeman 指定結果輸出的文件： 1
 </pre></td><td class='code'><pre><code class=''><span class='line'>gem install brakeman</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>指定結果輸出的文件：</h4>
+<h4>指定結果輸出的文件(全部掃描)</h4>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -109,7 +108,17 @@ gem install brakeman 指定結果輸出的文件： 1
 </span><span class='line'>brakeman -o output.html</span></code></pre></td></tr></table></div></figure>
 
 
+<h4>也可以不掃描指定檔案如helper</h4>
 
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brakeman --skip-files application_helper.rb --ignore-model-output -o brakeman_adm.html</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>打開該文件即可對有問題的地方作修正，點選message可以看詳細內容</h4>
+
+
+<p><img src="/images/brakeman.png" alt=""></p>
 </div>
   
   
