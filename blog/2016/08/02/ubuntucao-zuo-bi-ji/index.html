@@ -9,9 +9,7 @@
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="Precompile RAILS_ENV=production bundle exec rake assets:precompile
-kill -s TERM cat tmp/pids/unicorn.pid停止網站
-bundle exec unicorn_rails -c config/ &hellip;">
+  <meta name="description" content="Precompile RAILS_ENV=production bundle exec rake assets:precompile 停止網站 kill -s TERM cat tmp/pids/unicorn.pid 啟動網站Production模式 bundle exec &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,12 +85,27 @@ bundle exec unicorn_rails -c config/ &hellip;">
 <div class="entry-content"><h3>Precompile</h3>
 
 
-<ol>
-<li><code>RAILS_ENV=production bundle exec rake assets:precompile</code></li>
-<li><code>kill -s TERM <code>cat tmp/pids/unicorn.pid</code></code>停止網站</li>
-<li><code>bundle exec unicorn_rails -c config/unicorn.rb -D -E production</code>啟動網站Production模式</li>
-</ol>
+<p><code>RAILS_ENV=production bundle exec rake assets:precompile</code></p>
 
+<h4>停止網站</h4>
+
+
+<p><code>kill -s TERM <code>cat tmp/pids/unicorn.pid</code></code></p>
+
+<h4>啟動網站Production模式</h4>
+
+
+<p><code>bundle exec unicorn_rails -c config/unicorn.rb -D -E production</code></p>
+
+<h4>重啟網站</h4>
+
+
+<p><code>kill -s USR2 <code>cat tmp/pids/unicorn.pid</code></code></p>
+
+<h4>/var/log/nginx 查看log</h4>
+
+
+<p><code>tail -f access.log</code></p>
 </div>
 
 
@@ -128,6 +141,8 @@ bundle exec unicorn_rails -c config/ &hellip;">
         <a class="basic-alignment left" href="/blog/2016/06/23/searchkick/" title="Previous Post: Searchkick">&laquo; Searchkick</a>
       
       
+        <a class="basic-alignment right" href="/blog/2016/08/11/ruo-dian-sao-miao/" title="Next Post: 弱點掃描">弱點掃描 &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -139,6 +154,10 @@ bundle exec unicorn_rails -c config/ &hellip;">
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/08/11/ruo-dian-sao-miao/">弱點掃描</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/08/02/ubuntucao-zuo-bi-ji/">Ubuntu操作筆記</a>
@@ -154,10 +173,6 @@ bundle exec unicorn_rails -c config/ &hellip;">
     
       <li class="post">
         <a href="/blog/2016/05/24/jian-li-amazon-ec2-mian-fei-zhu-ji/">建立 Amazon EC2 免費主機</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/14/sass-slash-scss/">Sass / SCSS</a>
       </li>
     
   </ul>

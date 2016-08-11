@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2016-08-02T17:39:35+08:00</updated>
+  <updated>2016-08-11T17:13:03+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -14,6 +14,37 @@
 
   
   <entry>
+    <title type="html"><![CDATA[弱點掃描]]></title>
+    <link href="http://keith331.github.io/blog/2016/08/11/ruo-dian-sao-miao/"/>
+    <updated>2016-08-11T17:01:54+08:00</updated>
+    <id>http://keith331.github.io/blog/2016/08/11/ruo-dian-sao-miao</id>
+    <content type="html"><![CDATA[<h3>Brakeman</h3>
+
+
+<p>Brakeman是一款專門面向Ruby on Rails應用程式的漏洞掃描工具，同時也針對程序中一部分數值向另一部分傳遞的流程執行數據流分析。無需安裝整套應用程式即可使用該軟體</p>
+
+
+<h4>gem install</h4>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem install brakeman</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>指定結果輸出的文件：</h4>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd your_rails_app/
+</span><span class='line'>brakeman -o output.html</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Ubuntu操作筆記]]></title>
     <link href="http://keith331.github.io/blog/2016/08/02/ubuntucao-zuo-bi-ji/"/>
     <updated>2016-08-02T17:23:37+08:00</updated>
@@ -21,12 +52,27 @@
     <content type="html"><![CDATA[<h3>Precompile</h3>
 
 
-<ol>
-<li><code>RAILS_ENV=production bundle exec rake assets:precompile</code></li>
-<li><code>kill -s TERM <code>cat tmp/pids/unicorn.pid</code></code>停止網站</li>
-<li><code>bundle exec unicorn_rails -c config/unicorn.rb -D -E production</code>啟動網站Production模式</li>
-</ol>
+<p><code>RAILS_ENV=production bundle exec rake assets:precompile</code></p>
 
+<h4>停止網站</h4>
+
+
+<p><code>kill -s TERM <code>cat tmp/pids/unicorn.pid</code></code></p>
+
+<h4>啟動網站Production模式</h4>
+
+
+<p><code>bundle exec unicorn_rails -c config/unicorn.rb -D -E production</code></p>
+
+<h4>重啟網站</h4>
+
+
+<p><code>kill -s USR2 <code>cat tmp/pids/unicorn.pid</code></code></p>
+
+<h4>/var/log/nginx 查看log</h4>
+
+
+<p><code>tail -f access.log</code></p>
 ]]></content>
   </entry>
   

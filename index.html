@@ -9,9 +9,9 @@
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="Precompile RAILS_ENV=production bundle exec rake assets:precompile
-kill -s TERM cat tmp/pids/unicorn.pid停止網站
-bundle exec unicorn_rails -c config/ &hellip;">
+  <meta name="description" content="Brakeman Brakeman是一款專門面向Ruby on Rails應用程式的漏洞掃描工具，同時也針對程序中一部分數值向另一部分傳遞的流程執行數據流分析。無需安裝整套應用程式即可使用該軟體 gem install 1
+gem install brakeman 指定結果輸出的文件： 1
+2 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +71,57 @@ bundle exec unicorn_rails -c config/ &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2016/08/11/ruo-dian-sao-miao/">弱點掃描</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-08-11T17:01:54+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>5:01 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>Brakeman</h3>
+
+
+<p>Brakeman是一款專門面向Ruby on Rails應用程式的漏洞掃描工具，同時也針對程序中一部分數值向另一部分傳遞的流程執行數據流分析。無需安裝整套應用程式即可使用該軟體</p>
+
+
+<h4>gem install</h4>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem install brakeman</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>指定結果輸出的文件：</h4>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd your_rails_app/
+</span><span class='line'>brakeman -o output.html</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2016/08/02/ubuntucao-zuo-bi-ji/">Ubuntu操作筆記</a></h1>
     
     
@@ -90,12 +141,27 @@ bundle exec unicorn_rails -c config/ &hellip;">
   <div class="entry-content"><h3>Precompile</h3>
 
 
-<ol>
-<li><code>RAILS_ENV=production bundle exec rake assets:precompile</code></li>
-<li><code>kill -s TERM <code>cat tmp/pids/unicorn.pid</code></code>停止網站</li>
-<li><code>bundle exec unicorn_rails -c config/unicorn.rb -D -E production</code>啟動網站Production模式</li>
-</ol>
+<p><code>RAILS_ENV=production bundle exec rake assets:precompile</code></p>
 
+<h4>停止網站</h4>
+
+
+<p><code>kill -s TERM <code>cat tmp/pids/unicorn.pid</code></code></p>
+
+<h4>啟動網站Production模式</h4>
+
+
+<p><code>bundle exec unicorn_rails -c config/unicorn.rb -D -E production</code></p>
+
+<h4>重啟網站</h4>
+
+
+<p><code>kill -s USR2 <code>cat tmp/pids/unicorn.pid</code></code></p>
+
+<h4>/var/log/nginx 查看log</h4>
+
+
+<p><code>tail -f access.log</code></p>
 </div>
   
   
@@ -1071,83 +1137,6 @@ paste the following code:
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/05/10/includes/">Includes</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-05-10T11:14:34+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:14 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>當我們操作關聯性資料時，可以使用includes將關聯資料先抓出來，這樣每次要調用資料時就不是去資料庫搜尋，而是從已經調閱出來的資料搜尋，可以提高效能。舉例說明：</p>
-
-<p>假設「Board」has_many「Topics」，原本我們會這樣寫：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Board &lt; ActiveRecord::Base
-</span><span class='line'>  def
-</span><span class='line'>    @boards = Board.all
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>這種情況下若我們在view裡面寫@board.topics，假設我們共有10個board，系統會這樣幫我們找資料：</p>
-
-<p>1.到資料庫裡找board_id = 1 的topic</p>
-
-<p>2.到資料庫裡找board_id = 2 的topic</p>
-
-<p>&hellip;..</p>
-
-<p>10.到資料庫裡找board_id = 10 的topic</p>
-
-<p>這樣的做法有個很弔詭的地方在於我們重複搜尋了資料庫10次，造成效能問題。</p>
-
-<p>若加上 includes後會是這樣：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Board &lt; ActiveRecord::Base
-</span><span class='line'>  def
-</span><span class='line'>    @boards = Board.includes(:topics).all
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>這種時候我們若在view裡面寫@board.topics，假設我們共有10個board，系統會這樣幫我們找資料：</p>
-
-<p>1.到資料庫裡把topic全部抓出來</p>
-
-<p>2.從抓出來的 topic中找到 board_id 相對應的topic。</p>
-
-<p>這樣做我們就只需要搜尋一次，直接減少了資料庫的負擔。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1163,6 +1152,10 @@ paste the following code:
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/08/11/ruo-dian-sao-miao/">弱點掃描</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/08/02/ubuntucao-zuo-bi-ji/">Ubuntu操作筆記</a>
       </li>
     
@@ -1176,10 +1169,6 @@ paste the following code:
     
       <li class="post">
         <a href="/blog/2016/05/24/jian-li-amazon-ec2-mian-fei-zhu-ji/">建立 Amazon EC2 免費主機</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/05/14/sass-slash-scss/">Sass / SCSS</a>
       </li>
     
   </ul>
