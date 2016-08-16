@@ -9,7 +9,10 @@
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="Precompile RAILS_ENV=production bundle exec rake assets:precompile 停止網站 kill -s TERM cat tmp/pids/unicorn.pid 啟動網站Production模式 bundle exec &hellip;">
+  <meta name="description" content="Precompile 1
+RAILS_ENV=production bundle exec rake assets:precompile 停止網站 1
+kill -s TERM `cat tmp/pids/unicorn.pid` 啟動網站Production模式 1
+bundle exec &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,30 +85,40 @@
   </header>
 
 
-<div class="entry-content"><h3>Precompile</h3>
+<div class="entry-content"><h4>Precompile</h4>
 
 
-<p><code>RAILS_ENV=production bundle exec rake assets:precompile</code></p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>RAILS_ENV=production bundle exec rake assets:precompile</span></code></pre></td></tr></table></div></figure>
+
 
 <h4>停止網站</h4>
 
 
-<p><code>kill -s TERM <code>cat tmp/pids/unicorn.pid</code></code></p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>kill -s TERM `cat tmp/pids/unicorn.pid`</span></code></pre></td></tr></table></div></figure>
+
 
 <h4>啟動網站Production模式</h4>
 
 
-<p><code>bundle exec unicorn_rails -c config/unicorn.rb -D -E production</code></p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bundle exec unicorn_rails -c config/unicorn.rb -D -E production</span></code></pre></td></tr></table></div></figure>
+
 
 <h4>重啟網站</h4>
 
 
-<p><code>kill -s USR2 <code>cat tmp/pids/unicorn.pid</code></code></p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>kill -s USR2 `cat tmp/pids/unicorn.pid`</span></code></pre></td></tr></table></div></figure>
+
 
 <h4>/var/log/nginx 查看log</h4>
 
 
-<p><code>tail -f access.log</code></p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>tail -f access.log</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
