@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2016-08-16T13:49:35+08:00</updated>
+  <updated>2016-08-30T17:12:40+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -92,6 +92,13 @@
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>tail -f access.log</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>查看cpu</h4>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cat /proc/cpuinfo | grep processor | wc -l</span></code></pre></td></tr></table></div></figure>
 
 ]]></content>
   </entry>
