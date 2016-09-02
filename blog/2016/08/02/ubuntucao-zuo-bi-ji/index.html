@@ -126,6 +126,17 @@ bundle exec &hellip;">
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>cat /proc/cpuinfo | grep processor | wc -l</span></code></pre></td></tr></table></div></figure>
 
+
+<h4>nginx轉址：以本地網址加/green為例，轉到http://XXX/green/，在nginx設定加入以下</h4>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>location /green/ {
+</span><span class='line'>   rewrite ^ http://XXX/green/ permanent;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
