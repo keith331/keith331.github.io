@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2016-09-02T10:29:53+08:00</updated>
+  <updated>2016-10-13T16:20:35+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -12,6 +12,45 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu ENV Install]]></title>
+    <link href="http://keith331.github.io/blog/2016/10/13/ubuntu-env-install/"/>
+    <updated>2016-10-13T11:35:18+08:00</updated>
+    <id>http://keith331.github.io/blog/2016/10/13/ubuntu-env-install</id>
+    <content type="html"><![CDATA[<h3>Import MongoDB public key</h3>
+
+
+<ul>
+    <li>sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10</li>
+    <li>sudo echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list</li>
+</ul>
+
+
+<h3>Install Dependencies</h3>
+
+
+<ul>
+    <li>sudo apt-get update</li>
+    <li>sudo apt-get -y upgrade</li>
+    <li>sudo apt-get install -y nginx git-core mongodb-org imagemagick curl openssh-server nano</li>
+    <li>sudo apt-get --no-install-recommends --yes install gawk g++ gcc make libc6-dev libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev</li>
+</ul>
+
+
+<h3>Install RVM and Ruby</h3>
+
+
+<ul>
+    <li>\curl -sSL https://get.rvm.io | bash -s stable</li>
+    <li>source $HOME/.rvm/scripts/rvm</li>
+    <li>rvm install 2.1 --default</li>
+    <li>echo "gem: --no-ri --no-rdoc" > ~/.gemrc</li>
+    <li>gem install bundler</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[弱點掃描]]></title>
