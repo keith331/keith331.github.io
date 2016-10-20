@@ -257,6 +257,43 @@
 </span><span class='line'>   rewrite ^ http://XXX/green/ permanent;
 </span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
+
+<h4>異機同步設定參考/etc/lsyncd/lsyncd.conf.luafile</h4>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>settings {
+</span><span class='line'>    logfile = "/var/log/lsyncd/lsyncd.log",
+</span><span class='line'>    statusFile = "/var/log/lsyncd/lsyncd.status",
+</span><span class='line'>    delay = 0,
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>sync {
+</span><span class='line'>    default.rsyncssh,
+</span><span class='line'>    source = "/home/ubuntu/nccu/public/uploads",
+</span><span class='line'>    host = "ubuntu@10.1.0.103",
+</span><span class='line'>    targetdir = "/home/ubuntu/nccu/public/uploads",
+</span><span class='line'>    delete = true,
+</span><span class='line'>    rsync = {
+</span><span class='line'>         rsh="ssh -l ubuntu -i /home/ubuntu/nccu_key.pem -o StrictHostKeyChecking=no",
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
 </div>
   
   
