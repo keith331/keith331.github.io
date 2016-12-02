@@ -152,6 +152,16 @@ touch /etc/lsyncd/lsyncd.conf.lua 編輯lsyncd.conf. &hellip;">
 </span><span class='line'>touch /var/log/lsyncd/lsyncd.status</span></code></pre></td></tr></table></div></figure>
 
 
+<h4>lsyncd 透過 inotify 作為監測目錄寫入的機制</h4>
+
+
+<p>而 inotify 可監測的數量則受到 fs.inotify.max_user_watches 這個參數的限制。如果 lsyncd 欲監測的目錄數量超過系統的上限，並不會出現錯誤訊息，而是多餘的目錄直接被忽略。為了避免此一現象的發生，所以在<code>vim /etc/sysctl.conf</code>看看是否有以下的配置額</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>fs.inotify.max_user_watches = 999999</span></code></pre></td></tr></table></div></figure>
+
+
 <h4>之後重啟服務</h4>
 
 
