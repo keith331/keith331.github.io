@@ -382,6 +382,19 @@ touch /etc/lsyncd/lsyncd.conf.lua 編輯lsyncd.conf. &hellip;">
 </span><span class='line'>   rewrite ^ http://XXX/green/ permanent;
 </span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
+
+<h4>網址設定不接受副檔名，在nginx設定中加註</h4>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>location ~* \.(bak|zip|rar|exe)$|/\. {
+</span><span class='line'>    deny all;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+
 </div>
   
   
