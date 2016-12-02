@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2016-12-02T09:30:44+08:00</updated>
+  <updated>2016-12-02T15:32:50+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -93,6 +93,8 @@
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>fs.inotify.max_user_watches = 999999</span></code></pre></td></tr></table></div></figure>
 
+
+<p>設完好<code>sudo sysctl -p</code></p>
 
 <h4>之後重啟服務</h4>
 
