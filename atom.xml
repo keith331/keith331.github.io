@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2016-12-21T14:11:22+08:00</updated>
+  <updated>2016-12-21T14:49:09+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -81,6 +81,82 @@
 </span><span class='line'>
 </span><span class='line'># LOCALHOST
 </span><span class='line'>backup  /home/          localhost/</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h4>Testing Your Configuration</h4>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo rsnapshot configtest</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If your file is error-free, you will receive a “Syntax OK” message. If you did not receive this message, you need to go back and fix the mistakes that it tells you about.
+
+Next, we want to perform a dry run of one of the snapshot to make sure we are producing the expected results. We use the "hourly" parameter because hourly backups are the basic snapshot type that the other intervals will build off of. That means that we will get more information from "hourly" than if we had choosen "daily" or "weekly".</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo rsnapshot -t hourly</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>If the generated output looks correct, you can remove the “-t” option to try your setup for the first time.</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo rsnapshot hourly</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h4>Automating the Process</h4>
+
+
+<p>With rsnapshot working correctly, the only thing left to do is to schedule it to run at certain intervals. We will use cron, a linux scheduler, to make this happen.
+</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo nano /etc/cron.d/rsnapshot</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>The scheduling is currently commented out. We’re going to remove the “#” character from the beginning of the scheduling section to activate these values.</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># This is a sample cron file for rsnapshot.
+</span><span class='line'># The values used correspond to the examples in /etc/rsnapshot.conf.
+</span><span class='line'># There you can also set the backup points and many other things.
+</span><span class='line'>#
+</span><span class='line'># To activate this cron file you have to uncomment the lines below.
+</span><span class='line'># Feel free to adapt it to your needs.
+</span><span class='line'>
+</span><span class='line'>0 */4         * * *           root    /usr/bin/rsnapshot hourly
+</span><span class='line'>30 3          * * *           root    /usr/bin/rsnapshot daily
+</span><span class='line'>0  3          * * 1           root    /usr/bin/rsnapshot weekly
+</span><span class='line'>30 2          1 * *           root    /usr/bin/rsnapshot monthly</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>These settings will run add a snapshot to the “hourly” directory within our “/backup/” directory every four hours, add a daily snapshot everyday at 3:30 am, add a weekly snapshot every Monday at 3:00 am, and add a monthly snapshot on the first of every month at 2:30 am.</p>
 
 ]]></content>
   </entry>
