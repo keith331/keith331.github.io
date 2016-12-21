@@ -9,11 +9,9 @@
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="lsyncd一般用來同步備份資料夾，亦可以做到異機的同步，先下載安裝。 1
-apt-get install lsyncd 安裝之後，一些目錄必須手動建立 1
-2
-mkdir /etc/lsyncd
-touch /etc/lsyncd/lsyncd.conf.lua 編輯lsyncd.conf. &hellip;">
+  <meta name="description" content="Install rsnapshot 1
+sudo apt-get install rsnapshot Configuring Rsnapshot 1
+sudo nano /etc/rsnapshot.conf The first decision you will need to make is &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +65,98 @@ touch /etc/lsyncd/lsyncd.conf.lua 編輯lsyncd.conf. &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/12/21/rsnapshot-an-zhuang-yu-shi-yong-fang-shi/">How to Use Rsnapshot on Ubuntu</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-12-21T13:57:42+08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>1:57 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h4>Install rsnapshot</h4>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo apt-get install rsnapshot</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Configuring Rsnapshot</h4>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo nano /etc/rsnapshot.conf</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The first decision you will need to make is where you would like to store your backups. We will use the directory “/backup” as our backup location. Search for and edit the following variable to set the backup location.</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>snapshot_root             /backup/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We set these up under the “BACKUP INTERVALS” section of the configuration. We tell rsnapshot to retain a specific number of backups of each kind of interval.</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#########################################
+</span><span class='line'>#           BACKUP INTERVALS            #
+</span><span class='line'># Must be unique and in ascending order #
+</span><span class='line'># i.e. hourly, daily, weekly, etc.      #
+</span><span class='line'>#########################################
+</span><span class='line'>
+</span><span class='line'>retain        hourly  6
+</span><span class='line'>retain        daily   7
+</span><span class='line'>retain        weekly  4
+</span><span class='line'>retain        monthly 3</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>We will choose to backup the home directory and the etc directory.</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>###############################
+</span><span class='line'>### BACKUP POINTS / SCRIPTS ###
+</span><span class='line'>###############################
+</span><span class='line'>
+</span><span class='line'># LOCALHOST
+</span><span class='line'>backup  /home/          localhost/</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1062,132 +1152,6 @@ paste the following code:
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/05/14/helper-method-yu-view-context/">Helper_method 與 View_context</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-05-14T21:44:22+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>9:44 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>helper_method</h3>
-
-
-<p>在 controller 裡面的 method 不能在 view 裡面用。</p>
-
-<p>也就是在</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class ProductsController
-</span><span class='line'>  def find_cart
-</span><span class='line'>    @cart = Cart.find(session[:cart_id])
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>View 裡面不能用</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;%= find_cart.items %></span></code></pre></td></tr></table></div></figure>
-
-
-<p>拉這個 cart 出來直接用。</p>
-
-<p>如果你要在 controller 和 view 都能拉現在的購物車，必須要用 helper_method 宣告這是一個 controller 級的 helper。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class ApplicationController
-</span><span class='line'>  helper_method :current_cart
-</span><span class='line'>  def current_cart
-</span><span class='line'>    cart = Cart.find(session[:cart_id])
-</span><span class='line'>    return cart
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>這樣你就能在 View 裡面用 current_cart。</p>
-
-<p>&lt;%= current_cart.items %>
-或者是 Controller 裡面也能用 current_cart。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class ProductsController
-</span><span class='line'>  def add_to_cart
-</span><span class='line'>    current_cart.items &lt;&lt; @product
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>view_context</p>
-
-<p>在 helper 裡面的 method 不能在 controller 裡面用。 也就是在</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class ProductsController
-</span><span class='line'>  def show
-</span><span class='line'>    @page_description = truncate(@product.desc, :lenght => 50 )
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>是不會動的。</p>
-
-<p>如果要在 controller 裡面取用系統內建的 Rails View Helper，或自定義的 View Helper。 必須要用 view_context 去調用。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class ProductsController
-</span><span class='line'>  def show
-</span><span class='line'>    @page_description =  view_context.truncate(@product.desc, :lenght => 50 )
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>小結</h3>
-
-
-<p>但基本上還是建議在 View Helper 與 Controller 的 code 不要互相混來呼叫來呼叫去。讓 View 歸 View，Controller 歸 Controller。若真有業務上的需求需要「到處都可以用」。建議寫 Module 掛在 lib 用 mixin 技巧混入。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1203,6 +1167,10 @@ paste the following code:
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/12/21/rsnapshot-an-zhuang-yu-shi-yong-fang-shi/">How to Use Rsnapshot on Ubuntu</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/10/20/ubuntuxia-shi-yong-lsyncdtong-bu-zi-liao-jia/">Ubuntu下使用lsyncd同步資料夾</a>
       </li>
     
@@ -1216,10 +1184,6 @@ paste the following code:
     
       <li class="post">
         <a href="/blog/2016/08/02/ubuntucao-zuo-bi-ji/">Ubuntu操作筆記</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/06/23/searchkick/">Searchkick</a>
       </li>
     
   </ul>

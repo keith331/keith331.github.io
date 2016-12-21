@@ -9,7 +9,12 @@
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="Nested form 可以將有關聯的 model attribute 放在同一個 form 裡面一起建立或更新。 例如這次的實作是一個商品有很多種規格，我希望在新增商品的時候就可以同時新增完規格（ product has_many specs ）。 1.在 Modle 中宣告我們可以接受 &hellip;">
+  <meta name="description" content="helper_method 在 controller 裡面的 method 不能在 view 裡面用。 也就是在 1
+2
+3
+4
+5
+class ProductsController def find_cart @cart = Cart.find(session[:cart_id]) end &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +68,132 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/05/14/helper-method-yu-view-context/">Helper_method 與 View_context</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-05-14T21:44:22+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>9:44 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>helper_method</h3>
+
+
+<p>在 controller 裡面的 method 不能在 view 裡面用。</p>
+
+<p>也就是在</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ProductsController
+</span><span class='line'>  def find_cart
+</span><span class='line'>    @cart = Cart.find(session[:cart_id])
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>View 裡面不能用</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;%= find_cart.items %></span></code></pre></td></tr></table></div></figure>
+
+
+<p>拉這個 cart 出來直接用。</p>
+
+<p>如果你要在 controller 和 view 都能拉現在的購物車，必須要用 helper_method 宣告這是一個 controller 級的 helper。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ApplicationController
+</span><span class='line'>  helper_method :current_cart
+</span><span class='line'>  def current_cart
+</span><span class='line'>    cart = Cart.find(session[:cart_id])
+</span><span class='line'>    return cart
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這樣你就能在 View 裡面用 current_cart。</p>
+
+<p>&lt;%= current_cart.items %>
+或者是 Controller 裡面也能用 current_cart。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ProductsController
+</span><span class='line'>  def add_to_cart
+</span><span class='line'>    current_cart.items &lt;&lt; @product
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>view_context</p>
+
+<p>在 helper 裡面的 method 不能在 controller 裡面用。 也就是在</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ProductsController
+</span><span class='line'>  def show
+</span><span class='line'>    @page_description = truncate(@product.desc, :lenght => 50 )
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>是不會動的。</p>
+
+<p>如果要在 controller 裡面取用系統內建的 Rails View Helper，或自定義的 View Helper。 必須要用 view_context 去調用。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ProductsController
+</span><span class='line'>  def show
+</span><span class='line'>    @page_description =  view_context.truncate(@product.desc, :lenght => 50 )
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>小結</h3>
+
+
+<p>但基本上還是建議在 View Helper 與 Controller 的 code 不要互相混來呼叫來呼叫去。讓 View 歸 View，Controller 歸 Controller。若真有業務上的需求需要「到處都可以用」。建議寫 Module 掛在 lib 用 mixin 技巧混入。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1031,39 +1162,9 @@ rake db:reset 是內建的 task ，會執行一整套流程
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/02/28/rails101/">Rails101</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-02-28T12:53:24+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>12:53 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>終於完成Rails101了，一開始真的只能照著貼程式碼，只知道貼了會出現什麼功能，完全看不懂程式碼耶，接著開始嘗試照著
-程式碼key，就開始 key錯字 => 找錯字的一連串的bug迴圈阿，常常只因為一個字母，找了老半天還是找不到錯在哪，一段時間
-後，key錯的機率"似乎"變少了，熟悉key code再開始熟悉程式碼的意思，常常為了到底"命名"、"指令"想老半天，能記的下的
-就記下吧，記不下的把一些程式碼做個筆記，日後有用到一次看一次加深印象。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/posts/3">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -1076,6 +1177,10 @@ rake db:reset 是內建的 task ，會執行一整套流程
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/12/21/rsnapshot-an-zhuang-yu-shi-yong-fang-shi/">How to Use Rsnapshot on Ubuntu</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/10/20/ubuntuxia-shi-yong-lsyncdtong-bu-zi-liao-jia/">Ubuntu下使用lsyncd同步資料夾</a>
@@ -1091,10 +1196,6 @@ rake db:reset 是內建的 task ，會執行一整套流程
     
       <li class="post">
         <a href="/blog/2016/08/02/ubuntucao-zuo-bi-ji/">Ubuntu操作筆記</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/06/23/searchkick/">Searchkick</a>
       </li>
     
   </ul>

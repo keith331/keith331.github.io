@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2016-12-02T15:37:15+08:00</updated>
+  <updated>2016-12-21T14:11:22+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -12,6 +12,78 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to Use Rsnapshot on Ubuntu]]></title>
+    <link href="http://keith331.github.io/blog/2016/12/21/rsnapshot-an-zhuang-yu-shi-yong-fang-shi/"/>
+    <updated>2016-12-21T13:57:42+08:00</updated>
+    <id>http://keith331.github.io/blog/2016/12/21/rsnapshot-an-zhuang-yu-shi-yong-fang-shi</id>
+    <content type="html"><![CDATA[<h4>Install rsnapshot</h4>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo apt-get install rsnapshot</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Configuring Rsnapshot</h4>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo nano /etc/rsnapshot.conf</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The first decision you will need to make is where you would like to store your backups. We will use the directory “/backup” as our backup location. Search for and edit the following variable to set the backup location.</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>snapshot_root             /backup/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We set these up under the “BACKUP INTERVALS” section of the configuration. We tell rsnapshot to retain a specific number of backups of each kind of interval.</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#########################################
+</span><span class='line'>#           BACKUP INTERVALS            #
+</span><span class='line'># Must be unique and in ascending order #
+</span><span class='line'># i.e. hourly, daily, weekly, etc.      #
+</span><span class='line'>#########################################
+</span><span class='line'>
+</span><span class='line'>retain        hourly  6
+</span><span class='line'>retain        daily   7
+</span><span class='line'>retain        weekly  4
+</span><span class='line'>retain        monthly 3</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>We will choose to backup the home directory and the etc directory.</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>###############################
+</span><span class='line'>### BACKUP POINTS / SCRIPTS ###
+</span><span class='line'>###############################
+</span><span class='line'>
+</span><span class='line'># LOCALHOST
+</span><span class='line'>backup  /home/          localhost/</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ubuntu下使用lsyncd同步資料夾]]></title>
@@ -1717,18 +1789,6 @@ rake db:reset 是內建的 task ，會執行一整套流程
 
 
 <p>name 跟 current_password ( 使用者賬戶密碼確認 ) ，才能通過，允許資料修改</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails101]]></title>
-    <link href="http://keith331.github.io/blog/2016/02/28/rails101/"/>
-    <updated>2016-02-28T12:53:24+08:00</updated>
-    <id>http://keith331.github.io/blog/2016/02/28/rails101</id>
-    <content type="html"><![CDATA[<p>終於完成Rails101了，一開始真的只能照著貼程式碼，只知道貼了會出現什麼功能，完全看不懂程式碼耶，接著開始嘗試照著
-程式碼key，就開始 key錯字 => 找錯字的一連串的bug迴圈阿，常常只因為一個字母，找了老半天還是找不到錯在哪，一段時間
-後，key錯的機率"似乎"變少了，熟悉key code再開始熟悉程式碼的意思，常常為了到底"命名"、"指令"想老半天，能記的下的
-就記下吧，記不下的把一些程式碼做個筆記，日後有用到一次看一次加深印象。</p>
 ]]></content>
   </entry>
   
