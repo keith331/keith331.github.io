@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2016-12-21T14:49:09+08:00</updated>
+  <updated>2016-12-21T18:18:07+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -18,14 +18,14 @@
     <link href="http://keith331.github.io/blog/2016/12/21/rsnapshot-an-zhuang-yu-shi-yong-fang-shi/"/>
     <updated>2016-12-21T13:57:42+08:00</updated>
     <id>http://keith331.github.io/blog/2016/12/21/rsnapshot-an-zhuang-yu-shi-yong-fang-shi</id>
-    <content type="html"><![CDATA[<h4>Install rsnapshot</h4>
+    <content type="html"><![CDATA[<h3>Install rsnapshot</h3>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>sudo apt-get install rsnapshot</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>Configuring Rsnapshot</h4>
+<h3>Configuring Rsnapshot</h3>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -85,7 +85,7 @@
 
 
 
-<h4>Testing Your Configuration</h4>
+<h3>Testing Your Configuration</h3>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -114,7 +114,7 @@ Next, we want to perform a dry run of one of the snapshot to make sure we are pr
 
 
 
-<h4>Automating the Process</h4>
+<h3>Automating the Process</h3>
 
 
 <p>With rsnapshot working correctly, the only thing left to do is to schedule it to run at certain intervals. We will use cron, a linux scheduler, to make this happen.
