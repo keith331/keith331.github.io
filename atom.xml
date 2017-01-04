@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2017-01-04T15:11:22+08:00</updated>
+  <updated>2017-01-04T15:16:42+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -30,7 +30,7 @@
 <h3>Start to restore file</h3>
 
 
-<p>We need to know the inode of directory where the deleted file, eg./home/rulingcom/designer/Onepiece  user this command 
+<p>We need to know the inode of directory where the deleted file, eg./home/rulingcom/designer/Onepiece  use this command 
 </p>
 
 
