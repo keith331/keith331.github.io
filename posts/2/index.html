@@ -9,12 +9,7 @@
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="helper_method 在 controller 裡面的 method 不能在 view 裡面用。 也就是在 1
-2
-3
-4
-5
-class ProductsController def find_cart @cart = Cart.find(session[:cart_id]) end &hellip;">
+  <meta name="description" content="if / unless 的寫作觀念 Ruby 在邏輯控制的部份，除了提供 if 還提供了 unless。 unless 等於 「if not something 」等於 「if !something」。 不過雖說 Ruby 提供了 unless 這個用法，但在實務上來說，一般還是不太推薦使用 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -68,6 +63,112 @@ class ProductsController def find_cart @cart = Cart.find(session[:cart_id]) end 
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/05/14/luo-ji-guan-li/">邏輯慣例</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-05-14T21:49:13+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>9:49 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>if / unless 的寫作觀念</h3>
+
+
+<p>Ruby 在邏輯控制的部份，除了提供 if 還提供了 unless。</p>
+
+<p>unless 等於 「if not something 」等於 「if !something」。</p>
+
+<p>不過雖說 Ruby 提供了 unless 這個用法，但在實務上來說，一般還是不太推薦使用 unless。除了以下幾種狀況：</p>
+
+<p>當語意較適合時，使用 unless</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>unless content.blank?
+</span><span class='line'>  # ....
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>沒有 else 的時候，使用 unless</p>
+
+<p>當沒有 else 的時候，看起來還算 OK</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>unless foo?
+</span><span class='line'>  # ....
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但加上一個 else，看起來就不是那麼直觀了</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>unless foo?
+</span><span class='line'>  # ....
+</span><span class='line'>else
+</span><span class='line'>  # ....
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果專案當中有這樣的 code，相信我，換成 if 的陳述會直觀許多。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>if !foo?
+</span><span class='line'>  # ....
+</span><span class='line'>else
+</span><span class='line'>  # ....
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>當只有一個條件時，使用 unless 很適合。但多個條件時，使用 unless 很糟糕。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>unless foo? && baz?
+</span><span class='line'>  # ....
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>相同的，改成 if 也會直觀許多</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>if !foo? || !baz?
+</span><span class='line'>  # ...
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1105,63 +1206,6 @@ rake db:reset 是內建的 task ，會執行一整套流程
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/03/01/strong-parameters/">Strong Parameters</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-03-01T20:08:41+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>8:08 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>我們在做使用者功能裡面</p>
-
-<p>當增加了 name 的欄位，就必須要在 devise 預設的 strong_params => configure_permitted_parameters</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>before_action :configure_permitted_parameters, if: :devise_controller?
-</span><span class='line'>
-</span><span class='line'>protected
-</span><span class='line'>
-</span><span class='line'>def configure_permitted_parameters
-</span><span class='line'>devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :password_confirmation) }
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>把 :name 加進去，這樣在表單建立資料的時候， name 欄位的資料才會被允許送進資料庫存取裡面</p>
-
-<p>然後在修改 (update) 表單的頁面還要加入</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :email, :password, :password_confirmation, :current_password) }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>name 跟 current_password ( 使用者賬戶密碼確認 ) ，才能通過，允許資料修改</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/3">&larr; Older</a>
@@ -1179,6 +1223,10 @@ rake db:reset 是內建的 task ，會執行一整套流程
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/01/04/using-extundelete-recover-deleted-files/">Using Extundelete Recover Deleted Files</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/12/21/rsnapshot-an-zhuang-yu-shi-yong-fang-shi/">How to Use Rsnapshot on Ubuntu</a>
       </li>
     
@@ -1194,10 +1242,6 @@ rake db:reset 是內建的 task ，會執行一整套流程
         <a href="/blog/2016/08/11/ruo-dian-sao-miao/">弱點掃描</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2016/08/02/ubuntucao-zuo-bi-ji/">Ubuntu操作筆記</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -1211,7 +1255,7 @@ rake db:reset 是內建的 task ，會執行一整套流程
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - Keith -
+  Copyright &copy; 2017 - Keith -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

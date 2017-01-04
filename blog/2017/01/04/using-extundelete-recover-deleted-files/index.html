@@ -5,14 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Ubuntu操作筆記 - Keith's note</title>
+  <title>Using Extundelete Recover Deleted Files - Keith's note</title>
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="Precompile 1
-RAILS_ENV=production bundle exec rake assets:precompile 停止網站 1
-kill -s TERM `cat tmp/pids/unicorn.pid` 啟動網站Production模式 1
-bundle exec &hellip;">
+  <meta name="description" content="Install extundelete 1
+sudo apt-get install extundelete Start to restore file We need to know the inode of directory where the deleted file, eg./home/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +19,7 @@ bundle exec &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://keith331.github.io/blog/2016/08/02/ubuntucao-zuo-bi-ji/">
+  <link rel="canonical" href="http://keith331.github.io/blog/2017/01/04/using-extundelete-recover-deleted-files/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Keith's note" type="application/atom+xml">
@@ -69,7 +67,7 @@ bundle exec &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Ubuntu操作筆記</h1>
+      <h1 class="entry-title">Using Extundelete Recover Deleted Files</h1>
     
     
       <p class="meta">
@@ -78,75 +76,69 @@ bundle exec &hellip;">
 
 
 
-<time class='entry-date' datetime='2016-08-02T17:23:37+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2016</span></span> <span class='time'>5:23 pm</span></time>
+<time class='entry-date' datetime='2017-01-04T14:00:13+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>2:00 pm</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><h4>Precompile</h4>
+<div class="entry-content"><h3>Install extundelete</h3>
+
+
+<p></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo apt-get install extundelete</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Start to restore file</h3>
+
+
+<p>We need to know the inode of directory where the deleted file, eg./home/rulingcom/designer/Onepiece  user this command 
+</p>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>RAILS_ENV=production bundle exec rake assets:precompile</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ls -id /home/rulingcom/designer</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>停止網站</h4>
+<p><img src="/images/extundelete_1.png"><p></p>
 
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>kill -s TERM `cat tmp/pids/unicorn.pid`</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>啟動網站Production模式</h4>
+<p>finding which devise that this directory is using </p>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>bundle exec unicorn_rails -c config/unicorn.rb -D -E production</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>df /home/rulingcom/designer</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>重啟網站</h4>
+<p><img src="/images/extundelete_2.png"><p></p>
 
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>kill -s USR2 `cat tmp/pids/unicorn.pid`</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>/var/log/nginx 查看log</h4>
+<p>so this directory in /dev/sdb1 then lets look</p>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>tail -f access.log</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo extundelete /dev/sdb1 --inode 2229439</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>查看cpu</h4>
+<p>The deleted files must be on the list</p>
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>cat /proc/cpuinfo | grep processor | wc -l</span></code></pre></td></tr></table></div></figure>
+<p><img src="/images/extundelete_3.png"><p></p>
 
-
-<h4>nginx轉址：以本地網址加/green為例，轉到http://XXX/green/，在nginx設定加入以下</h4>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>location /green/ {
-</span><span class='line'>   rewrite ^ http://XXX/green/ permanent;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>網址設定不接受副檔名，在nginx設定中加註</h4>
+<p>If resoring go successful the file will be put on "RECOVERD_FILES" folder</p>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>location ~* \.(bak|zip|rar|exe)$|/\. {
-</span><span class='line'>    deny all;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo extundelete /dev/sdb1 --restore-file /home/rulingcom/designer/Onepiece</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="/images/extundelete_4.png"><p></p>
+
+<h3>Start to restore director</h3>
+
+
+<p>Changing the command "--restore-file" to "--restore-director"</p>
 
 
 
@@ -165,7 +157,7 @@ bundle exec &hellip;">
 
 
 
-<time class='entry-date' datetime='2016-08-02T17:23:37+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2016</span></span> <span class='time'>5:23 pm</span></time>
+<time class='entry-date' datetime='2017-01-04T14:00:13+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>2:00 pm</span></time>
       
 
 
@@ -173,7 +165,7 @@ bundle exec &hellip;">
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/08/02/ubuntucao-zuo-bi-ji/" data-via="" data-counturl="http://keith331.github.io/blog/2016/08/02/ubuntucao-zuo-bi-ji/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2017/01/04/using-extundelete-recover-deleted-files/" data-via="" data-counturl="http://keith331.github.io/blog/2017/01/04/using-extundelete-recover-deleted-files/" >Tweet</a>
   
   
   
@@ -182,10 +174,8 @@ bundle exec &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2016/06/23/searchkick/" title="Previous Post: Searchkick">&laquo; Searchkick</a>
+        <a class="basic-alignment left" href="/blog/2016/12/21/rsnapshot-an-zhuang-yu-shi-yong-fang-shi/" title="Previous Post: How to use rsnapshot on ubuntu">&laquo; How to use rsnapshot on ubuntu</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2016/08/11/ruo-dian-sao-miao/" title="Next Post: 弱點掃描">弱點掃描 &raquo;</a>
       
     </p>
   </footer>

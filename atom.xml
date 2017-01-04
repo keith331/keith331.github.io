@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2016-12-21T18:18:07+08:00</updated>
+  <updated>2017-01-04T15:11:22+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -12,6 +12,73 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Using Extundelete Recover Deleted Files]]></title>
+    <link href="http://keith331.github.io/blog/2017/01/04/using-extundelete-recover-deleted-files/"/>
+    <updated>2017-01-04T14:00:13+08:00</updated>
+    <id>http://keith331.github.io/blog/2017/01/04/using-extundelete-recover-deleted-files</id>
+    <content type="html"><![CDATA[<h3>Install extundelete</h3>
+
+
+<p></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo apt-get install extundelete</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Start to restore file</h3>
+
+
+<p>We need to know the inode of directory where the deleted file, eg./home/rulingcom/designer/Onepiece  user this command 
+</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ls -id /home/rulingcom/designer</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="http://keith331.github.io/images/extundelete_1.png"><p></p>
+
+<p>finding which devise that this directory is using </p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>df /home/rulingcom/designer</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="http://keith331.github.io/images/extundelete_2.png"><p></p>
+
+<p>so this directory in /dev/sdb1 then lets look</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo extundelete /dev/sdb1 --inode 2229439</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The deleted files must be on the list</p>
+
+
+<p><img src="http://keith331.github.io/images/extundelete_3.png"><p></p>
+
+<p>If resoring go successful the file will be put on "RECOVERD_FILES" folder</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo extundelete /dev/sdb1 --restore-file /home/rulingcom/designer/Onepiece</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="http://keith331.github.io/images/extundelete_4.png"><p></p>
+
+<h3>Start to restore director</h3>
+
+
+<p>Changing the command "--restore-file" to "--restore-director"</p>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to Use Rsnapshot on Ubuntu]]></title>
@@ -1828,43 +1895,6 @@ rake db:reset 是內建的 task ，會執行一整套流程
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Strong Parameters]]></title>
-    <link href="http://keith331.github.io/blog/2016/03/01/strong-parameters/"/>
-    <updated>2016-03-01T20:08:41+08:00</updated>
-    <id>http://keith331.github.io/blog/2016/03/01/strong-parameters</id>
-    <content type="html"><![CDATA[<p>我們在做使用者功能裡面</p>
-
-<p>當增加了 name 的欄位，就必須要在 devise 預設的 strong_params => configure_permitted_parameters</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>before_action :configure_permitted_parameters, if: :devise_controller?
-</span><span class='line'>
-</span><span class='line'>protected
-</span><span class='line'>
-</span><span class='line'>def configure_permitted_parameters
-</span><span class='line'>devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :password_confirmation) }
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>把 :name 加進去，這樣在表單建立資料的時候， name 欄位的資料才會被允許送進資料庫存取裡面</p>
-
-<p>然後在修改 (update) 表單的頁面還要加入</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :email, :password, :password_confirmation, :current_password) }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>name 跟 current_password ( 使用者賬戶密碼確認 ) ，才能通過，允許資料修改</p>
 ]]></content>
   </entry>
   
