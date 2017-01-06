@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2017-01-06T15:48:02+08:00</updated>
+  <updated>2017-01-06T15:50:40+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -21,7 +21,7 @@
     <content type="html"><![CDATA[<h3>Check status</h3>
 
 
-<p><code>cat /proc/mdstat</code>or <code>mdadm &ndash;detail /dev/md0</code></p>
+<p><code>cat /proc/mdstat</code>or <code>watch -n 0.2 cat /proc/mdstat</code></p>
 
 <p>If it's successful that will be</p>
 
