@@ -5,11 +5,19 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Rails - Keith's note</title>
+  <title>Ubuntu SoftRaid - Keith's note</title>
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="Category: rails">
+  <meta name="description" content="Check status cat /proc/mdstator mdadm &ndash;detail /dev/md0 If it's successful that will be 1
+2
+3
+4
+5
+6
+7
+8
+Personalities : [linear] [multipath] [ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +26,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://keith331.github.io/blog/categories/rails/">
+  <link rel="canonical" href="http://keith331.github.io/blog/2017/01/06/ubuntu-softraid/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Keith's note" type="application/atom+xml">
@@ -62,35 +70,112 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Rails</h1>
+    
+      <h1 class="entry-title">Ubuntu SoftRaid</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-01-06T14:58:55+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>2:58 pm</span></time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
-
-  
-  <h2>2016</h2>
-
-<article>
-  
-<h1><a href="/blog/2016/02/28/rails101/">Rails101</a></h1>
-<time datetime="2016-02-28T12:53:24+08:00" pubdate><span class='month'>Feb</span> <span class='day'>28</span> <span class='year'>2016</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/rails/'>rails</a></span>
-</footer>
+<div class="entry-content"><h3>Check status</h3>
 
 
-</article>
+<p><code>cat /proc/mdstat</code>or <code>mdadm &ndash;detail /dev/md0</code></p>
 
+<p>If it's successful that will be</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5] [raid4] [raid10]
+</span><span class='line'>md1 : active raid1 sda5[0] sdb5[1]
+</span><span class='line'>      16697216 blocks super 1.2 [2/2] [UU]
+</span><span class='line'>
+</span><span class='line'>md0 : active raid1 sdb1[1]
+</span><span class='line'>      959923008 blocks super 1.2 [2/1] [_U]
+</span><span class='line'>
+</span><span class='line'>unused devices: &lt;none></span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Fdisk Hdd</h3>
+
+
+<p>
+<code>sfdisk -d /dev/sda | sfdisk /dev/sdb</code></p>
+
+<p>the partition of sdb separate the same like sda</p>
+
+
+<h3>Remove the failed HDD</h3>
+
+
+<p><code>mdadm /dev/md0 &ndash;remove /dev/sda1</code></p>
+
+<h3>Add a new HDD</h3>
+
+
+<p><code>mdadm /dev/md0 &ndash;add /dev/sda1</code></p>
+
+<h3>Stop raid</h3>
+
+
+<p><code>mdadm &ndash;stop /dev/md0</code></p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Keith</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2017-01-06T14:58:55+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>2:58 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2017/01/06/ubuntu-softraid/" data-via="" data-counturl="http://keith331.github.io/blog/2017/01/06/ubuntu-softraid/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/01/04/using-extundelete-recover-deleted-files/" title="Previous Post: Using extundelete recover deleted files">&laquo; Using extundelete recover deleted files</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

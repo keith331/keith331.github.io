@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2017-01-05T15:32:51+08:00</updated>
+  <updated>2017-01-06T15:48:02+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -12,6 +12,63 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu SoftRaid]]></title>
+    <link href="http://keith331.github.io/blog/2017/01/06/ubuntu-softraid/"/>
+    <updated>2017-01-06T14:58:55+08:00</updated>
+    <id>http://keith331.github.io/blog/2017/01/06/ubuntu-softraid</id>
+    <content type="html"><![CDATA[<h3>Check status</h3>
+
+
+<p><code>cat /proc/mdstat</code>or <code>mdadm &ndash;detail /dev/md0</code></p>
+
+<p>If it's successful that will be</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5] [raid4] [raid10]
+</span><span class='line'>md1 : active raid1 sda5[0] sdb5[1]
+</span><span class='line'>      16697216 blocks super 1.2 [2/2] [UU]
+</span><span class='line'>
+</span><span class='line'>md0 : active raid1 sdb1[1]
+</span><span class='line'>      959923008 blocks super 1.2 [2/1] [_U]
+</span><span class='line'>
+</span><span class='line'>unused devices: &lt;none></span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Fdisk Hdd</h3>
+
+
+<p>
+<code>sfdisk -d /dev/sda | sfdisk /dev/sdb</code></p>
+
+<p>the partition of sdb separate the same like sda</p>
+
+
+<h3>Remove the failed HDD</h3>
+
+
+<p><code>mdadm /dev/md0 &ndash;remove /dev/sda1</code></p>
+
+<h3>Add a new HDD</h3>
+
+
+<p><code>mdadm /dev/md0 &ndash;add /dev/sda1</code></p>
+
+<h3>Stop raid</h3>
+
+
+<p><code>mdadm &ndash;stop /dev/md0</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Using Extundelete Recover Deleted Files]]></title>
@@ -1820,81 +1877,6 @@ rake db:reset 是內建的 task ，會執行一整套流程
 => db:schema:load ( 資料庫欄位建立 ) => db:seed ( 執行資料庫種子 )</p>
 
 <p>重新啟動 rails s</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Note_message]]></title>
-    <link href="http://keith331.github.io/blog/2016/03/01/note-message/"/>
-    <updated>2016-03-01T20:09:44+08:00</updated>
-    <id>http://keith331.github.io/blog/2016/03/01/note-message</id>
-    <content type="html"><![CDATA[<h2>以下這段是訊息通知功能，供日後參考</h2>
-
-
-
-
-<figure class='code'><figcaption><span>app/helpers/application_helper.rb</span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">module</span> <span class="nn">ApplicationHelper</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">notice_message</span>
-</span><span class='line'>    <span class="n">alert_types</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">notice</span><span class="p">:</span> <span class="ss">:success</span><span class="p">,</span> <span class="ss">alert</span><span class="p">:</span> <span class="ss">:danger</span> <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">close_button_options</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">class</span><span class="p">:</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="s2">&quot;data-dismiss&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;alert&quot;</span><span class="p">,</span> <span class="s2">&quot;aria-hidden&quot;</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="p">}</span>
-</span><span class='line'>    <span class="n">close_button</span> <span class="o">=</span> <span class="n">content_tag</span><span class="p">(</span><span class="ss">:button</span><span class="p">,</span> <span class="s2">&quot;×&quot;</span><span class="p">,</span> <span class="n">close_button_options</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">alerts</span> <span class="o">=</span> <span class="n">flash</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">type</span><span class="p">,</span> <span class="n">message</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">alert_content</span> <span class="o">=</span> <span class="n">close_button</span> <span class="o">+</span> <span class="n">message</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="n">alert_type</span> <span class="o">=</span> <span class="n">alert_types</span><span class="o">[</span><span class="n">type</span><span class="o">.</span><span class="n">to_sym</span><span class="o">]</span> <span class="o">||</span> <span class="n">type</span>
-</span><span class='line'>      <span class="n">alert_class</span> <span class="o">=</span> <span class="s2">&quot;alert alert-</span><span class="si">#{</span><span class="n">alert_type</span><span class="si">}</span><span class="s2"> alert-dismissable&quot;</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="n">content_tag</span><span class="p">(</span><span class="ss">:div</span><span class="p">,</span> <span class="n">alert_content</span><span class="p">,</span> <span class="ss">class</span><span class="p">:</span> <span class="n">alert_class</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">alerts</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">html_safe</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<h2>把 notice_message 放進 application.html.erb 裡面</h2>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div class="container-fluid">
-</span><span class='line'>  &lt;%= render "common/navbar" %>
-</span><span class='line'>+ &lt;%= notice_message %>
-</span><span class='line'>  &lt;%= yield %>
-</span><span class='line'>&lt;/div></span></code></pre></td></tr></table></div></figure>
-
-
-
 ]]></content>
   </entry>
   
