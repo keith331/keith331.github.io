@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2017-01-13T10:25:52+08:00</updated>
+  <updated>2017-01-13T10:51:15+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -18,7 +18,7 @@
     <link href="http://keith331.github.io/blog/2017/01/13/setting-ssl-with-lets-encrypt-for-free-certification/"/>
     <updated>2017-01-13T09:42:17+08:00</updated>
     <id>http://keith331.github.io/blog/2017/01/13/setting-ssl-with-lets-encrypt-for-free-certification</id>
-    <content type="html"><![CDATA[<h3>進入Let's Encypt <a href="certbot.eff.org">官網</a>選擇Web server及OS版本後，下面會出現安裝步驟(這裡使用Nginx + Ubuntu 14.04</h3>
+    <content type="html"><![CDATA[<h3>進入Let's Encypt <a href="http://certbot.eff.org">官網</a>選擇Web server及OS版本後，下面會出現安裝步驟(這裡使用Nginx + Ubuntu 14.04)</h3>
 
 
 <h3>STEP1</h3>
@@ -49,11 +49,11 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>certbot-auto renew --dry-run</span></code></pre></td></tr></table></div></figure>
 
 
-<p>並在cronjob內，每日執行更新</p>
+<p>在cronjob內每日執行更新，Let's Encrypt憑證使用期限為三個月，不過每日更新可以讓伺服器保持在最新的狀態，Cerbot只會在憑證前一個月才會進行更新。</p>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>./certbot-auto renew --quiet --no-self-upgrade</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>./certbot-auto renew --quiet --no-self-upgrade --post-hook"service nginx reload"</span></code></pre></td></tr></table></div></figure>
 
 
 <h3>在Nginx Configuration設定中加下列設定(orbit路徑名稱更換要設定的名稱)</h3>
