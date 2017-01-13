@@ -9,15 +9,12 @@
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="Check status cat /proc/mdstator watch -n 0.2 cat /proc/mdstat If it's successful that will be 1
+  <meta name="description" content="進入Let's Encypt 官網選擇Web server及OS版本後，下面會出現安裝步驟(這裡使用Nginx + Ubuntu 14.04 STEP1 1
 2
 3
-4
-5
-6
-7
-8
-Personalities : [linear] [multipath] [ &hellip;">
+wget https://dl.eff.org/certbot-auto
+chmod a+x certbot-auto
+./ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +68,153 @@ Personalities : [linear] [multipath] [ &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2017/01/13/setting-ssl-with-lets-encrypt-for-free-certification/">Setting SSL With Let's Encrypt for Free Certification</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-01-13T09:42:17+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>9:42 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>進入Let's Encypt <a href="certbot.eff.org">官網</a>選擇Web server及OS版本後，下面會出現安裝步驟(這裡使用Nginx + Ubuntu 14.04</h3>
+
+
+<h3>STEP1</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wget https://dl.eff.org/certbot-auto
+</span><span class='line'>chmod a+x certbot-auto
+</span><span class='line'>./certbot-auto</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>STEP2</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>./certbot-auto</span></code></pre></td></tr></table></div></figure>
+
+
+<p>進入設定畫面，大致都直接下一步(設定目錄的地方設要做HTTPS網站下的Public目錄</p>
+
+
+<p>結束後更新設定檔指令</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>certbot-auto renew --dry-run</span></code></pre></td></tr></table></div></figure>
+
+
+<p>並在cronjob內，每日執行更新</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>./certbot-auto renew --quiet --no-self-upgrade</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>在Nginx Configuration設定中加下列設定(orbit路徑名稱更換要設定的名稱)</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {
+</span><span class='line'>listen 443 ssl;
+</span><span class='line'>
+</span><span class='line'>root /home/rulingcom/orbit/public;
+</span><span class='line'>
+</span><span class='line'>server_name orbit.rulingcom.com;
+</span><span class='line'>server_name www.orbit.com orbit.com;
+</span><span class='line'>
+</span><span class='line'>client_max_body_size 500m;
+</span><span class='line'>
+</span><span class='line'>access_log /home/rulingcom/orbit/log/ssl-access.log;
+</span><span class='line'>error_log /home/rulingcom/orbit/log/ssl-error.log;
+</span><span class='line'>
+</span><span class='line'>ssl on;
+</span><span class='line'>ssl_certificate /etc/letsencrypt/live/www.orbit.com/fullchain.pem;
+</span><span class='line'>ssl_certificate_key /etc/letsencrypt/live/www.orbit.com/privkey.pem;
+</span><span class='line'>
+</span><span class='line'>ssl_session_timeout 5m;
+</span><span class='line'>ssl_protocols SSLv2 SSLv3 TLSv1;
+</span><span class='line'>
+</span><span class='line'>ssl_ciphers RC4:HIGH:!aNULL:!MD5;
+</span><span class='line'>ssl_prefer_server_ciphers on;
+</span><span class='line'>
+</span><span class='line'>location / {
+</span><span class='line'>try_files $uri $uri/index.html $uri.html @app;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>location @app {
+</span><span class='line'>proxy_redirect off;
+</span><span class='line'>proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+</span><span class='line'>proxy_set_header Host $http_host;
+</span><span class='line'>proxy_connect_timeout 360;
+</span><span class='line'>proxy_pass http://orbit_sock;
+</span><span class='line'>}
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>設定完重啟nginx server</p>
+
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -932,85 +1076,6 @@ paste the following code:
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/05/24/jian-li-amazon-ec2-mian-fei-zhu-ji/">建立 Amazon EC2 免費主機</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-05-24T10:33:38+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:33 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>申請帳號</h3>
-
-
-<p><a href="http://aws.amazon.com/tw/free/">http://aws.amazon.com/tw/free/</a></p>
-
-<h3>建立免費AWS主機</h3>
-
-
-<p>1.點選左上方的<code>services</code>選擇<code>EC2</code>服務：
-<img src="/images/aws_ec2_1.png"><p>
-2.選擇機房位置，可以選台灣連線速度最佳的日本Tokyo或新加坡<code></code>Singapore
-<img src="/images/aws_ec2_2.png"><p>&lt;
-3.選完地區後，點選左側<code>Instance</code>再點選<code>Launch Instance</code>進入建立主機的步驟：
-<img src="/images/aws_ec2_3.png"><p>
-4.選擇你要的作業系統，這裡我選Ubuntu Server 12.04.3 LTS
-<img src="/images/aws_ec2_4.png"><p>
-5.主機類型Instance Type請選擇免費的T2.micro
-<img src="/images/aws_ec2_5.png"><p>
-6.其它步驟可忽略直接跳過，直接進入設定防火牆的確認，請確認SSH有開放，之後才能登入
-<img src="/images/aws_ec2_6.png"><p>
-7.最後確認主機沒問題後點選<code>Launch</code>啟動主機：
-<img src="/images/aws_ec2_7.png"><p>
-8.接著會彈出一個視窗，請選擇<code>Create a new key pair</code>，然後隨意輸入一個名字在<code>Key pair name </code>欄位，接著點選<code>Download Key Pair</code>，將下載的key收好，待會要用這把key登入你的主機，下載完後點選<code> Launch Instance</code>啟動主機：<p>
-<img src="/images/aws_ec2_8.png"><p></p>
-
-<h3>登入AWS主機</h3>
-
-
-<p>1.點選剛剛建立完成的主機，找到Public IP把它複製下來
-<img src="/images/aws_ec2_9.png"><p>
-2.開啟終端機，輸入</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ssh -i ~/路徑/密鑰名稱.pem 使用這名稱@IP</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3.UNPROTECTED PRIVATE KEY FILE，初次使用 Key Pair 登入 EC2 可能會遇到這個警告
-通常是因為這個鑰匙檔的權限太過於公開
-<img src="/images/aws_ec2_10.png"><p>
-輸入以下可以解決</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>chmod 400  ~/路徑/密鑰名稱.pem</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<h3>將key加入</h3>
-
-
-<p>ssh/id_rsa.pub內容 加到server下 authorized_keys 之後就不用輸入key</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1026,6 +1091,10 @@ paste the following code:
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/01/13/setting-ssl-with-lets-encrypt-for-free-certification/">Setting SSL With Let's Encrypt for Free Certification</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/01/06/ubuntu-softraid/">Ubuntu SoftRaid</a>
       </li>
     
@@ -1039,10 +1108,6 @@ paste the following code:
     
       <li class="post">
         <a href="/blog/2016/10/20/ubuntuxia-shi-yong-lsyncdtong-bu-zi-liao-jia/">Ubuntu下使用lsyncd同步資料夾</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/10/13/ubuntu-env-install/">Ubuntu ENV Install</a>
       </li>
     
   </ul>

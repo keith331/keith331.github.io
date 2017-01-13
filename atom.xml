@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2017-01-06T15:50:40+08:00</updated>
+  <updated>2017-01-13T10:25:52+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -12,6 +12,133 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Setting SSL With Let's Encrypt for Free Certification]]></title>
+    <link href="http://keith331.github.io/blog/2017/01/13/setting-ssl-with-lets-encrypt-for-free-certification/"/>
+    <updated>2017-01-13T09:42:17+08:00</updated>
+    <id>http://keith331.github.io/blog/2017/01/13/setting-ssl-with-lets-encrypt-for-free-certification</id>
+    <content type="html"><![CDATA[<h3>進入Let's Encypt <a href="certbot.eff.org">官網</a>選擇Web server及OS版本後，下面會出現安裝步驟(這裡使用Nginx + Ubuntu 14.04</h3>
+
+
+<h3>STEP1</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wget https://dl.eff.org/certbot-auto
+</span><span class='line'>chmod a+x certbot-auto
+</span><span class='line'>./certbot-auto</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>STEP2</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>./certbot-auto</span></code></pre></td></tr></table></div></figure>
+
+
+<p>進入設定畫面，大致都直接下一步(設定目錄的地方設要做HTTPS網站下的Public目錄</p>
+
+
+<p>結束後更新設定檔指令</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>certbot-auto renew --dry-run</span></code></pre></td></tr></table></div></figure>
+
+
+<p>並在cronjob內，每日執行更新</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>./certbot-auto renew --quiet --no-self-upgrade</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>在Nginx Configuration設定中加下列設定(orbit路徑名稱更換要設定的名稱)</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {
+</span><span class='line'>listen 443 ssl;
+</span><span class='line'>
+</span><span class='line'>root /home/rulingcom/orbit/public;
+</span><span class='line'>
+</span><span class='line'>server_name orbit.rulingcom.com;
+</span><span class='line'>server_name www.orbit.com orbit.com;
+</span><span class='line'>
+</span><span class='line'>client_max_body_size 500m;
+</span><span class='line'>
+</span><span class='line'>access_log /home/rulingcom/orbit/log/ssl-access.log;
+</span><span class='line'>error_log /home/rulingcom/orbit/log/ssl-error.log;
+</span><span class='line'>
+</span><span class='line'>ssl on;
+</span><span class='line'>ssl_certificate /etc/letsencrypt/live/www.orbit.com/fullchain.pem;
+</span><span class='line'>ssl_certificate_key /etc/letsencrypt/live/www.orbit.com/privkey.pem;
+</span><span class='line'>
+</span><span class='line'>ssl_session_timeout 5m;
+</span><span class='line'>ssl_protocols SSLv2 SSLv3 TLSv1;
+</span><span class='line'>
+</span><span class='line'>ssl_ciphers RC4:HIGH:!aNULL:!MD5;
+</span><span class='line'>ssl_prefer_server_ciphers on;
+</span><span class='line'>
+</span><span class='line'>location / {
+</span><span class='line'>try_files $uri $uri/index.html $uri.html @app;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>location @app {
+</span><span class='line'>proxy_redirect off;
+</span><span class='line'>proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+</span><span class='line'>proxy_set_header Host $http_host;
+</span><span class='line'>proxy_connect_timeout 360;
+</span><span class='line'>proxy_pass http://orbit_sock;
+</span><span class='line'>}
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>設定完重啟nginx server</p>
+
+
+<p></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ubuntu SoftRaid]]></title>
@@ -1786,97 +1913,6 @@ Good Encapsulation好的封裝性
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[撰寫rake]]></title>
-    <link href="http://keith331.github.io/blog/2016/03/05/zhuan-xie-rake/"/>
-    <updated>2016-03-05T11:03:00+08:00</updated>
-    <id>http://keith331.github.io/blog/2016/03/05/zhuan-xie-rake</id>
-    <content type="html"><![CDATA[<h2>撰寫 rake dev:build => 自動化執行清空+重跑 migration +種子載入資料</h2>
-
-
-
-
-<p>雖然 db:reset 已經能自動地幫我們把資料庫清空、重建、跑 seed
-
-如果想把整個開發中專案的資料一切歸零，還需要跑 rake log:clear 跟 rake tmp:clear
-如果懶得一個個打上述指令 + rake db:drop + rake db:create + rake db:migrate + rake db:seed
-來把整個專案清空重建並建立 seed 檔
-可以寫一個 rake 來自動化執行
-
-在 lib/tasks/ 資料夾建立一個檔案 dev.rake</p>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>namespace :dev do
-</span><span class='line'>  desc "Rebuild system"
-</span><span class='line'>  task :build => ["tmp:clear", "log:clear", "db:drop", "db:create", "db:migrate"]
-</span><span class='line'>  task :rebuild => [ "dev:build", "db:seed" ]
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>這樣只要打</p>
-
-<p><code>rake dev:build</code>
-即可把專案資料一切清空歸零重建</p>
-
-<p><code>rake dev:rebuild</code>
-即可重建完再跑 seed</p>
-
-<h1> 撰寫 seed.rb 檔</h1>
-
-
-<p>
-  我們在開發專案的時候，常會需要弄些假資料來填充版面
-或是說當資料庫炸掉的時候，會很想一股腦把 資料庫整個 reset 掉
-並希望 reset 完還能把一些資料放進去，像是 user, groups, posts，不用一個個手動輸入
-
-我們來做一個 seed 檔，需求:
-
-建立一個 user 帳號 => example@gmail.com , 密碼 12345678
-並用此帳號建立 20 個 groups
-每個 group 各有 30 個 posts
-</p>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>puts "這個種子檔會自動建立一個帳號, 並且創建 20 個 groups, 每個 group 各 30 個 posts"
-</span><span class='line'>
-</span><span class='line'>create_account = User.create([email: 'example@gmail.com', password: '12345678', password_confirmation: '12345678', name: '測試用帳號'])
-</span><span class='line'>
-</span><span class='line'>create_groups = for i in 1..20 do
-</span><span class='line'>                  Group.create!([title: "Group no.#{i}", description: "這是用種子建立的第 #{i} 個討論版", user_id: "1"])
-</span><span class='line'>                  GroupUser.create(group_id: i, user_id: 1)
-</span><span class='line'>                  for k in 1..30 do
-</span><span class='line'>                    Post.create!([group_id: "#{i}",content: "這是用種子建立的第 #{k} 個留言", user_id: "1"])
-</span><span class='line'>                  end
-</span><span class='line'>                end</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>rake db:reset</code>
-rake db:reset 是內建的 task ，會執行一整套流程
-包含 db:drop( 資料庫移除 ) => db:create( 資料庫建立 )
-=> db:schema:load ( 資料庫欄位建立 ) => db:seed ( 執行資料庫種子 )</p>
-
-<p>重新啟動 rails s</p>
 ]]></content>
   </entry>
   

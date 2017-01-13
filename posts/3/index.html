@@ -9,27 +9,7 @@
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="以下這段是訊息通知功能，供日後參考 app/helpers/application_helper.rb
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-module ApplicationHelper def notice_message &hellip;">
+  <meta name="description" content="撰寫 rake dev:build => 自動化執行清空+重跑 migration +種子載入資料 雖然 db:reset 已經能自動地幫我們把資料庫清空、重建、跑 seed 如果想把整個開發中專案的資料一切歸零，還需要跑 rake log:clear 跟 rake tmp:clear &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +63,117 @@ module ApplicationHelper def notice_message &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/03/05/zhuan-xie-rake/">撰寫rake</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-03-05T11:03:00+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:03 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>撰寫 rake dev:build => 自動化執行清空+重跑 migration +種子載入資料</h2>
+
+
+
+
+<p>雖然 db:reset 已經能自動地幫我們把資料庫清空、重建、跑 seed
+
+如果想把整個開發中專案的資料一切歸零，還需要跑 rake log:clear 跟 rake tmp:clear
+如果懶得一個個打上述指令 + rake db:drop + rake db:create + rake db:migrate + rake db:seed
+來把整個專案清空重建並建立 seed 檔
+可以寫一個 rake 來自動化執行
+
+在 lib/tasks/ 資料夾建立一個檔案 dev.rake</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>namespace :dev do
+</span><span class='line'>  desc "Rebuild system"
+</span><span class='line'>  task :build => ["tmp:clear", "log:clear", "db:drop", "db:create", "db:migrate"]
+</span><span class='line'>  task :rebuild => [ "dev:build", "db:seed" ]
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這樣只要打</p>
+
+<p><code>rake dev:build</code>
+即可把專案資料一切清空歸零重建</p>
+
+<p><code>rake dev:rebuild</code>
+即可重建完再跑 seed</p>
+
+<h1> 撰寫 seed.rb 檔</h1>
+
+
+<p>
+  我們在開發專案的時候，常會需要弄些假資料來填充版面
+或是說當資料庫炸掉的時候，會很想一股腦把 資料庫整個 reset 掉
+並希望 reset 完還能把一些資料放進去，像是 user, groups, posts，不用一個個手動輸入
+
+我們來做一個 seed 檔，需求:
+
+建立一個 user 帳號 => example@gmail.com , 密碼 12345678
+並用此帳號建立 20 個 groups
+每個 group 各有 30 個 posts
+</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>puts "這個種子檔會自動建立一個帳號, 並且創建 20 個 groups, 每個 group 各 30 個 posts"
+</span><span class='line'>
+</span><span class='line'>create_account = User.create([email: 'example@gmail.com', password: '12345678', password_confirmation: '12345678', name: '測試用帳號'])
+</span><span class='line'>
+</span><span class='line'>create_groups = for i in 1..20 do
+</span><span class='line'>                  Group.create!([title: "Group no.#{i}", description: "這是用種子建立的第 #{i} 個討論版", user_id: "1"])
+</span><span class='line'>                  GroupUser.create(group_id: i, user_id: 1)
+</span><span class='line'>                  for k in 1..30 do
+</span><span class='line'>                    Post.create!([group_id: "#{i}",content: "這是用種子建立的第 #{k} 個留言", user_id: "1"])
+</span><span class='line'>                  end
+</span><span class='line'>                end</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>rake db:reset</code>
+rake db:reset 是內建的 task ，會執行一整套流程
+包含 db:drop( 資料庫移除 ) => db:create( 資料庫建立 )
+=> db:schema:load ( 資料庫欄位建立 ) => db:seed ( 執行資料庫種子 )</p>
+
+<p>重新啟動 rails s</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -283,6 +374,10 @@ module ApplicationHelper def notice_message &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/01/13/setting-ssl-with-lets-encrypt-for-free-certification/">Setting SSL With Let's Encrypt for Free Certification</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/01/06/ubuntu-softraid/">Ubuntu SoftRaid</a>
       </li>
     
@@ -296,10 +391,6 @@ module ApplicationHelper def notice_message &hellip;">
     
       <li class="post">
         <a href="/blog/2016/10/20/ubuntuxia-shi-yong-lsyncdtong-bu-zi-liao-jia/">Ubuntu下使用lsyncd同步資料夾</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/10/13/ubuntu-env-install/">Ubuntu ENV Install</a>
       </li>
     
   </ul>
