@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2017-01-13T10:51:15+08:00</updated>
+  <updated>2017-04-20T10:07:52+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -148,7 +148,8 @@
     <content type="html"><![CDATA[<h3>Check status</h3>
 
 
-<p><code>cat /proc/mdstat</code>or <code>watch -n 0.2 cat /proc/mdstat</code></p>
+<p>靜態看 同步進度<code>cat /proc/mdstat</code><br>
+動態看 同步進度<code>watch -n 0.2 cat /proc/mdstat</code></p>
 
 <p>If it's successful that will be</p>
 
@@ -171,29 +172,40 @@
 </span><span class='line'>unused devices: &lt;none></span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Fdisk Hdd</h3>
+<h3>raid 1其中一顆硬碟壞了更換步驟，先把預替換硬碟裝上</h3>
 
 
-<p>
-<code>sfdisk -d /dev/sda | sfdisk /dev/sdb</code></p>
-
-<p>the partition of sdb separate the same like sda</p>
+<p>看哪一顆壞了</p>
 
 
-<h3>Remove the failed HDD</h3>
+<p><code> mdadm -D /dev/md0</code></p>
+
+<p>標記壞的那一顆</p>
 
 
-<p><code>mdadm /dev/md0 &ndash;remove /dev/sda1</code></p>
+<p>  <br/>
+<code> mdadm &ndash;fail /dev/md0 /dev/sdb1</code></p>
 
-<h3>Add a new HDD</h3>
-
-
-<p><code>mdadm /dev/md0 &ndash;add /dev/sda1</code></p>
-
-<h3>Stop raid</h3>
+<p>把sdb1移除</p>
 
 
-<p><code>mdadm &ndash;stop /dev/md0</code></p>
+<p><code>mdadm &ndash;remove /dev/md0 /dev/sdc2</code></p>
+
+<p>將新硬碟分割與原硬碟相同</p>
+
+
+<p><code>sfdisk -d /dev/sda | sfdisk /dev/sdb</code></p>
+
+<p>用sdc1 取代sdb1</p>
+
+
+<p> <br/>
+<code>mdadm &ndash;add /dev/md0 /dev/sdc2 </code></p>
+
+<p>開始同步 把資料 從 /sda1 copy 到 /sdc2(記得add上後就自動同步</p>
+
+
+<p><code>mdadm &ndash;assemble /dev/md0 /dev/sda1 /dev/sdc1</code></p>
 ]]></content>
   </entry>
   
