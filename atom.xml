@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2017-04-20T10:07:52+08:00</updated>
+  <updated>2017-05-04T17:25:19+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -12,6 +12,68 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Swap使用過解決方法]]></title>
+    <link href="http://keith331.github.io/blog/2017/05/04/swapshi-yong-guo-jie-jue-fang-fa/"/>
+    <updated>2017-05-04T17:16:49+08:00</updated>
+    <id>http://keith331.github.io/blog/2017/05/04/swapshi-yong-guo-jie-jue-fang-fa</id>
+    <content type="html"><![CDATA[<h3>刷新swap空間</h3>
+
+
+<p>停止swap使用free查看使用狀況</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>swapoff -a</span></code></pre></td></tr></table></div></figure>
+
+
+<p>啟動swap使用free查看使用狀況</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>swapon -a</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h3>控制swap空間使用比率</h3>
+
+
+<p>swappiness的值的大小對如何使用swap分區是有很大的關系。swappiness=0的時候表示最大限度使用物理内存，然後才是 swap空間，swappiness＝100的时候表示極級的使用swap分區，並且把内存上的数據及時的搬運到swap空間裡面。两个極端，對于 ubuntu的默認設置，這個值等於60，建議修改為10。</p>
+
+
+<p></p>
+
+<p>查看系統的swappiness值</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cat /proc/sys/vm/swappiness</span></code></pre></td></tr></table></div></figure>
+
+
+<p>沒意外預設值應該是60</p>
+
+
+<p>修改swappiness值為10</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo sysctl vm.swappiness=10
+</span><span class='line'>sudo vi /etc/sysctl.conf
+</span><span class='line'>最後一行加上
+</span><span class='line'>vm.swappiness=10</span></code></pre></td></tr></table></div></figure>
+
+
+<p>系統重啟</p>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Setting SSL With Let's Encrypt for Free Certification]]></title>
@@ -1862,68 +1924,6 @@ paste the following code:
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>#linear-gradient { @include background-image(linear-gradient(left top, white, #dddddd)); }</span></code></pre></td></tr></table></div></figure>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[What's Helper]]></title>
-    <link href="http://keith331.github.io/blog/2016/03/15/whats-helper/"/>
-    <updated>2016-03-15T10:26:29+08:00</updated>
-    <id>http://keith331.github.io/blog/2016/03/15/whats-helper</id>
-    <content type="html"><![CDATA[<p>Helper 是一些使用在 Rails 的 View 當中，用 Ruby 產生/整理 HTML code 的一些小方法。通常被放在 app/helpers 下。預設的 Helper 名字是對應 Controller 的，產生一個 Controller 時，通常會產生一個同名的 Helper。如 PostsController 與 PostsHelper。</p>
-
-<p>使用 Helper 的情境多半是：</p>
-
-<p>產生的 HTML code 需要與原始程式碼進行一些邏輯混合，但不希望 View 裡面搞得太髒。
-需要與預設的 Rails 內建的一些方便 Helper 交叉使用。
-使用 Helper 封裝程式碼可以帶給專案以下一些優點：</p>
-
-<p>Don&rsquo;t repeat yourself（DRY）程式碼不重複
-Good Encapsulation好的封裝性
-提供 view 模板良好的組織
-易於修改程式碼</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>module BoardsHelper
-</span><span class='line'>
-</span><span class='line'> # 回傳board的name，避免在view中做太多判斷
-</span><span class='line'>  def render_board_name(board)
-</span><span class='line'>      if board.present?
-</span><span class='line'>        board.name
-</span><span class='line'>    else
-</span><span class='line'>        "unknown"
-</span><span class='line'>    end
-</span><span class='line'>  end
-</span><span class='line'>
-</span><span class='line'># 常常重複的區段也可以寫進 helper，統一管理
-</span><span class='line'>  def render_board_name_path(board)
-</span><span class='line'>    link_to(board.name, board_path(board))
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在view中可以直接取用如下</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;%= render_board_name_path(@board) %></span></code></pre></td></tr></table></div></figure>
-
-
 
 ]]></content>
   </entry>
