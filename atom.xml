@@ -4,7 +4,7 @@
   <title><![CDATA[Keith's note]]></title>
   <link href="http://keith331.github.io/atom.xml" rel="self"/>
   <link href="http://keith331.github.io/"/>
-  <updated>2017-05-04T17:25:19+08:00</updated>
+  <updated>2017-05-26T17:53:33+08:00</updated>
   <id>http://keith331.github.io/</id>
   <author>
     <name><![CDATA[Keith]]></name>
@@ -12,6 +12,110 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Use MongoDB指令使用]]></title>
+    <link href="http://keith331.github.io/blog/2017/05/26/use-mongodbzhi-ling-shi-yong/"/>
+    <updated>2017-05-26T17:36:42+08:00</updated>
+    <id>http://keith331.github.io/blog/2017/05/26/use-mongodbzhi-ling-shi-yong</id>
+    <content type="html"><![CDATA[<p>顯示出目前有哪些資料庫</p>
+
+
+<p></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show dbs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用一個資料庫friends</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>use friends</span></code></pre></td></tr></table></div></figure>
+
+
+<p>刪除現在正在使用的資料庫</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.dropDatabase()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>顯示目前使用資料庫的名字</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.getName()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>新增一個名字叫best的collection到friend這個資料庫，並寫入資料{name:”simon”,age:”25”}</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.insert({name:”simon”,age:”25”})</span></code></pre></td></tr></table></div></figure>
+
+
+<p>刪除best這個collection</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.drop()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>顯示friend這個資料庫內的所有collections</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show collections
+</span><span class='line'>db.getCollectionNames()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>讀取best這個collection內的所有資料</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.find()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>制定要搜尋best這個collection的範圍或是條件，以age來舉例,搜尋age值為25:</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.find({age:25})</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在best這個collection內的name:simon後加入一個新的欄位，內容為phone:123</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.update({name:'simon'},{'$set':{phone:123}})</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在best這個collection內刪除一個內容為phone:123的欄位</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.update({name:'simon'},{'$unset':{phone:123}})</span></code></pre></td></tr></table></div></figure>
+
+
+<p>將best這個collection內{name:’simon’}修改成{name:’yes’}</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.update({name:'simon'},{name:'yes'})</span></code></pre></td></tr></table></div></figure>
+
+
+<p>清空best這個collection 中的所有資料</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.remove()</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Swap使用過解決方法]]></title>
@@ -581,6 +685,9 @@ Next, we want to perform a dry run of one of the snapshot to make sure we are pr
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>ps aux | grep [l]syncd</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>☆同步主機需建立host key autorization</h4>
 
 
 
@@ -1673,258 +1780,6 @@ paste the following code:
 <p>這樣做的好處是可以避免所謂的跨站請求偽造 (Cross-site Request Forgery) ，又稱 CSRF。 CSRF 攻擊的原理是偽造一個 form 送 post 給伺服器，所以很有可能發生的情況是你在Ａ網站有登入使用者，但是在Ｂ網站點了帶有 CSRF code的連結，內容是要重新設定Ａ網站的使用者密碼為 12345678，此時Ａ網站以為是你自己送出的請求，那麼你的密碼就被換掉了。</p>
 
 <p>而 Rails 加上了 authenticity_token 這樣的機制就是為了阻擋 CSRF，因為Ｂ網站不會知道你的 authenticity_token 是什麼，送出的 post request 就會被擋下來。在 CSRF 中預設會檢查 POST, PUT, DELETE requests 的 authenticity_token。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Sass/SCSS]]></title>
-    <link href="http://keith331.github.io/blog/2016/03/16/sass-slash-scss/"/>
-    <updated>2016-03-16T10:53:28+08:00</updated>
-    <id>http://keith331.github.io/blog/2016/03/16/sass-slash-scss</id>
-    <content type="html"><![CDATA[<p>Asset Pipeline 提供了內建直接使用 Sass 撰寫 CSS 的功能。你也許會生出這樣的疑惑：什麼是 Sass？ Why should I care?</p>
-
-<p>Sass (Syntactically Awesome Stylesheets) 原先是內建在 Haml 中的一個副功能。</p>
-
-<p>Haml</p>
-
-<p>要談 Sass，就不得不先來談 Haml 這個 project。 Haml 全名為 HTML Abstract Markup Language，它是提供網頁設計師撰寫 HTML 的另外一條途徑。</p>
-
-<p>透過 Haml，你可以很快的使用它的 syntax 寫出結構穩固的 HTML。</p>
-
-<p>網頁設計師經常有一個煩惱：在撰寫 HTML 時要是忘記關一個 TAG，在瀏覽器中整個版面可能就會大爆炸，而這樣的 Bug 卻是很難被抓出來的。</p>
-
-<p>Haml 主要就是讓開發者，能夠使用縮排的方式撰寫 HTML，輕鬆做到永不忘記關 Tag 的效果。以下是 Haml 範例：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>%h1= "Hello World"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>產生出來的 HTML 就會長這樣</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;h1>Hello World&lt;/h1></span></code></pre></td></tr></table></div></figure>
-
-
-<p>而</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>%ul{:id => "list", :class => "menu"}
-</span><span class='line'>    %li= "Item 1"
-</span><span class='line'>    %li= "Item 2"
-</span><span class='line'>    %li= "Item 3"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>會產生出來這樣的 HTML</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;ul id="list" class="menu">
-</span><span class='line'>      &lt;li>Item 1&lt;/li>
-</span><span class='line'>      &lt;li>Item 2&lt;/li>
-</span><span class='line'>      &lt;li>Item 3&lt;/li>
-</span><span class='line'>  &lt;/ul></span></code></pre></td></tr></table></div></figure>
-
-
-<p>使用 Haml 撰寫 HTML 的好處</p>
-
-<p>Haml 是需要使用縮排撰寫，再行 compile 的 markup language。它可以讓你：</p>
-
-<p>阻絕撰寫出錯誤結構的 HTML TAG 的機會</p>
-
-<p>只要 syntax 一錯誤，編譯就無法成功。利用這樣的特性，很容易阻絕寫出會在瀏覽器因為 TAG 結構錯誤而難以 debug 出的 HTML。</p>
-
-<p>輕鬆調整排版</p>
-
-<p>在網頁設計開發階段，若要大幅調整 HTML 結構，對網頁設計師也是很傷腦筋的一件事。因為大幅的搬動 HTML，通常有時候會造成：「少剪到一個 TAG」或 「改了開頭 TAG ，卻忘了改關閉 TAG 」的憾事。</p>
-
-<p>在 Haml 中，這些狀況都不會發生。因為 Haml 本身就屬於「塊狀結構」、「自我 close」。因此不論怎樣搬動和調整，只要符合縮排，幾乎都不會爆炸。</p>
-
-<p>使用 Haml 撰寫 HTML 的壞處</p>
-
-<p>如此 powerful 的 markup language 為何沒有風行？反倒是原先屬於副功能的 Sass 大紅特紅。原因就在於 Haml 的特性：不只需要被機器 compile，它也需要被人腦 compile。</p>
-
-<p>HTML 本身就是一門相當直觀的 markup language。在撰寫 Haml 時，排版雖然相當輕鬆。但接手維護 Haml 版面的人，卻通常痛苦不堪。因為「非常不直觀」。</p>
-
-<p>這也是 Haml 的反對者，批評最力的地方。</p>
-
-<p>多數人無法接受維護不直觀的「任何東西」，加上撰寫 Haml 需要另外學習特殊的 syntax。沒有壓倒性的好處，一般人是不會貿然進行技術投資的。這也是為什麼 Haml 始終處是小眾技術的主要原因。</p>
-
-<p>Sass / SCSS</p>
-
-<p>拉回來談 Sass，Sass 原先是附屬在 Haml 裡面的一個副功能。這也是 sass-convert 這個指令必須要安裝 haml 這個 gem 才能使用的原因。</p>
-
-<p>Sass 的原理，是讓開發者可以透過「縮排」的方式去撰寫維護 CSS，同樣可以避免忘記關 TAG 而大爆炸的糗事。</p>
-
-<p>而因為 CSS 的結構特性，造成了 Sass 與 Haml 截然不同的命運。多數人反對 Haml，是因為 Haml 反而造成了 HTML 在閱讀上的不直觀。</p>
-
-<p>而 Sass 的語法</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>.content
-</span><span class='line'>    margin: 2em 0
-</span><span class='line'>    h1
-</span><span class='line'>      font-size: 2em</span></code></pre></td></tr></table></div></figure>
-
-
-<p>產生出</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>.content{
-</span><span class='line'>    margin: 2em 0;
-</span><span class='line'>   }
-</span><span class='line'>   .content h1{
-</span><span class='line'>      font-size: 2em;
-</span><span class='line'>   }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>反倒讓 CSS 的維護變得直觀了。接觸 Sass / SCSS 後的不少開發者甚至認為，縮排 block 的撰寫方式才是 CSS 在被發明時應該被設計出來的樣子。</p>
-
-<p>現在撰寫 CSS 的方式，有一個絕大缺點：只要在結構上涉及巢狀或多個 class，維護者就必須複製貼上 style。不少人認為這真是愚蠢至極且煩人透頂的設計。</p>
-
-<p>其他便利功能</p>
-
-<p>Sass 也提供了其他便利功能，如變數、函數、數學、繼承、mixin …等等功能。</p>
-
-<p>在進行網頁 protyping 時，更改全站配色或者是直接提供兩個以上的設計，對設計師來說是家常便飯的事。</p>
-
-<p>但更改全站配色卻是相當麻煩的一件事，因為「尋找 + 全數取代」，並不能保證最後會有正確的結果。很有可能：你更改了所有 CSS 中涉及連結的顏色，卻發現在全數取代的過程中，不小心也改到邊框的顏色。</p>
-
-<p>若能使用變數去指定特定 style 的顏色，該有多好。</p>
-
-<p>變數 ( Variables )</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$border-color: #3bbfce
-</span><span class='line'>   $link-color: #3bbfcf
-</span><span class='line'>   .content
-</span><span class='line'>      border-color: $border-color
-</span><span class='line'>      a
-</span><span class='line'>        color: $link-color</span></code></pre></td></tr></table></div></figure>
-
-
-<p>生成</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>.content{ border-color: #3bbfce; }
-</span><span class='line'>   .content a{color: #3bbfcf; }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>數學</p>
-
-<p>在調整區塊寬度時，你也希望：每次調整寬度時，可不可以不要每次都按計算機，再全數手動修改…</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>.content
-</span><span class='line'>      width: (500px/2);</span></code></pre></td></tr></table></div></figure>
-
-
-<p>生成</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>``` css
-</span><span class='line'>   .content{ width: 250px; }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>內建函式</p>
-
-<p>在調整顏色亮度時，你希望可否無需再開調色盤，直接改 CSS 就讓 style 暗一點？</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$color = darken(#800, 20%)
-</span><span class='line'>   .content
-</span><span class='line'>      background-color: $color</span></code></pre></td></tr></table></div></figure>
-
-
-<p>生成</p>
-
-<p>   .content{ background-color: #200; }
-這都還只是 Sass 所提供的當中一小部分基礎功能而已，卻足以讓網頁設計師驚艷十足了。加上撰寫維護時十分直觀，這也難怪為何 Sass 只是 Haml 中的副功能，後繼的聲勢浪頭卻遠高於 Haml 本身。</p>
-
-<p>SCSS</p>
-
-<p>那 SCSS 又與 Sass 有什麼差別，他們看起來好像是類似的東西？</p>
-
-<p>是這樣的，Sass 原先使用的縮排，對於網頁設計師來說，還是相當不直觀。而且實務上也不能直接將舊有的 CSS 直接貼進 Sass 中。其實還是存在一定的不方便度。也因此 Sass 進行了進化，改良了 syntax，而 Sass 3 後來就被稱為 SCSS ( Sassy CSS)。</p>
-
-<p>它的 syntax 與 CSS 原有的 syntax 完全 compatible，使用了 { } 去取代原先的縮排方式。</p>
-
-<p>比如說原有的</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>.content
-</span><span class='line'>    margin: 2em 0
-</span><span class='line'>    h1
-</span><span class='line'>      font-size: 2em</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在 SCSS 中變成了</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>.content{
-</span><span class='line'>    margin: 2em 0;
-</span><span class='line'>    h1 {font-size: 2em }
-</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在撰寫上，更加無比的直觀，同時也能將舊有的 CSS 直接貼進去，完全沒問題！SCSS 更新增了不少關於 CSS3 的 feature 函式。</p>
-
-<p>就拿我最愛的背景漸變色來說好了，原先要做漸變色，CSS 必須要這樣寫：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#linear-gradient {
-</span><span class='line'>   background-image: -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0%, #ffffff), color-stop(100%, #dddddd));
-</span><span class='line'>   background-image: -webkit-linear-gradient(left top, #ffffff, #dddddd);
-</span><span class='line'>   background-image: -moz-linear-gradient(left top, #ffffff, #dddddd);
-</span><span class='line'>   background-image: -o-linear-gradient(left top, #ffffff, #dddddd);
-</span><span class='line'>   background-image: -ms-linear-gradient(left top, #ffffff, #dddddd);
-</span><span class='line'>   background-image: linear-gradient(left top, #ffffff, #dddddd);
-</span><span class='line'> }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>因為你必須支援所有的 Browser。</p>
-
-<p>但在 SCSS 中，一行就搞定了！</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#linear-gradient { @include background-image(linear-gradient(left top, white, #dddddd)); }</span></code></pre></td></tr></table></div></figure>
-
 ]]></content>
   </entry>
   

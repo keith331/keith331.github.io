@@ -5,14 +5,15 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Ubuntu操作筆記 - Keith's note</title>
+  <title>Use MongoDB指令使用 - Keith's note</title>
   <meta name="author" content="Keith">
 
   
-  <meta name="description" content="Precompile 1
-RAILS_ENV=production bundle exec rake assets:precompile 停止網站 1
-kill -s TERM `cat tmp/pids/unicorn.pid` 啟動網站Production模式 1
-bundle exec &hellip;">
+  <meta name="description" content="顯示出目前有哪些資料庫 1
+show dbs 使用一個資料庫friends 1
+use friends 刪除現在正在使用的資料庫 1
+db.dropDatabase() 顯示目前使用資料庫的名字 1
+db.getName() 新增一個名字叫best的collection到friend這個資料庫， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +22,7 @@ bundle exec &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://keith331.github.io/blog/2016/08/02/ubuntucao-zuo-bi-ji/">
+  <link rel="canonical" href="http://keith331.github.io/blog/2017/05/26/use-mongodbzhi-ling-shi-yong/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Keith's note" type="application/atom+xml">
@@ -69,7 +70,7 @@ bundle exec &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Ubuntu操作筆記</h1>
+      <h1 class="entry-title">Use MongoDB指令使用</h1>
     
     
       <p class="meta">
@@ -78,75 +79,106 @@ bundle exec &hellip;">
 
 
 
-<time class='entry-date' datetime='2016-08-02T17:23:37+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2016</span></span> <span class='time'>5:23 pm</span></time>
+<time class='entry-date' datetime='2017-05-26T17:36:42+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>5:36 pm</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><h4>Precompile</h4>
+<div class="entry-content"><p>顯示出目前有哪些資料庫</p>
+
+
+<p></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show dbs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用一個資料庫friends</p>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>RAILS_ENV=production bundle exec rake assets:precompile</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>use friends</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>停止網站</h4>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>kill -s TERM `cat tmp/pids/unicorn.pid`</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>啟動網站Production模式</h4>
+<p>刪除現在正在使用的資料庫</p>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>bundle exec unicorn_rails -c config/unicorn.rb -D -E production</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.dropDatabase()</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>重啟網站</h4>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>kill -s USR2 `cat tmp/pids/unicorn.pid`</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>/var/log/nginx 查看log</h4>
+<p>顯示目前使用資料庫的名字</p>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>tail -f access.log</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.getName()</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>查看cpu</h4>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>cat /proc/cpuinfo | grep processor | wc -l</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>nginx轉址：以本地網址加/green為例，轉到http://XXX/green/，在nginx設定加入以下</h4>
+<p>新增一個名字叫best的collection到friend這個資料庫，並寫入資料{name:”simon”,age:”25”}</p>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>location /green/ {
-</span><span class='line'>   rewrite ^ http://XXX/green/ permanent;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.insert({name:”simon”,age:”25”})</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>網址設定不接受副檔名，在nginx設定中加註</h4>
+<p>刪除best這個collection</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.drop()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>顯示friend這個資料庫內的所有collections</p>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>location ~* \.(bak|zip|rar|exe)$|/\. {
-</span><span class='line'>    deny all;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show collections
+</span><span class='line'>db.getCollectionNames()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>讀取best這個collection內的所有資料</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.find()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>制定要搜尋best這個collection的範圍或是條件，以age來舉例,搜尋age值為25:</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.find({age:25})</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在best這個collection內的name:simon後加入一個新的欄位，內容為phone:123</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.update({name:'simon'},{'$set':{phone:123}})</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在best這個collection內刪除一個內容為phone:123的欄位</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.update({name:'simon'},{'$unset':{phone:123}})</span></code></pre></td></tr></table></div></figure>
+
+
+<p>將best這個collection內{name:’simon’}修改成{name:’yes’}</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.update({name:'simon'},{name:'yes'})</span></code></pre></td></tr></table></div></figure>
+
+
+<p>清空best這個collection 中的所有資料</p>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.best.remove()</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -165,7 +197,7 @@ bundle exec &hellip;">
 
 
 
-<time class='entry-date' datetime='2016-08-02T17:23:37+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2016</span></span> <span class='time'>5:23 pm</span></time>
+<time class='entry-date' datetime='2017-05-26T17:36:42+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>5:36 pm</span></time>
       
 
 
@@ -173,7 +205,7 @@ bundle exec &hellip;">
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2016/08/02/ubuntucao-zuo-bi-ji/" data-via="" data-counturl="http://keith331.github.io/blog/2016/08/02/ubuntucao-zuo-bi-ji/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://keith331.github.io/blog/2017/05/26/use-mongodbzhi-ling-shi-yong/" data-via="" data-counturl="http://keith331.github.io/blog/2017/05/26/use-mongodbzhi-ling-shi-yong/" >Tweet</a>
   
   
   
@@ -182,10 +214,8 @@ bundle exec &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2016/06/23/searchkick/" title="Previous Post: Searchkick">&laquo; Searchkick</a>
+        <a class="basic-alignment left" href="/blog/2017/05/04/swapshi-yong-guo-jie-jue-fang-fa/" title="Previous Post: Swap使用過解決方法">&laquo; Swap使用過解決方法</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2016/08/11/ruo-dian-sao-miao/" title="Next Post: 弱點掃描">弱點掃描 &raquo;</a>
       
     </p>
   </footer>
